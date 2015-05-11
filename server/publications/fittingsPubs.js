@@ -15,7 +15,7 @@ Meteor.publish('fittings', function() {
 			self.added('fittings', document._id, calculateStats(document));
 		},
 		changed: function (newDocument, oldDocument) {
-			self.changed('fittings', document._id, calculateStats(newDocument));
+			self.changed('fittings', oldDocument._id, calculateStats(newDocument));
 		},
 		removed: function (oldDocument) {
 			self.removed('fittings', oldDocument._id);
