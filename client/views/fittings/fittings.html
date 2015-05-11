@@ -1,0 +1,22 @@
+<template name="fittings">
+{{#each fittings}} 
+	{{stats.navigation.speed}}
+{{/each}}
+
+	{{>addFitting}}
+</template>
+
+<template name="addFitting">
+<div class="row">
+	<div class="col-md-8 col-md-offset-1">
+		<div class="panel panel-default addFittingPanel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add new Fitting</h3>
+			</div>
+			<div class="panel-body">
+				{{> quickForm id="addFittingForm" schema=AddFittingsSchema type="method" meteormethod="addFitting"}}
+			</div>
+		</div>
+	</div>
+</div>
+</template>

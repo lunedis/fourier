@@ -1,7 +1,7 @@
 Router.route('/', {
 	name: 'home',
 	action: function() {
-		this.render('home');
+		this.render('fittings');
   		SEO.set({ title: 'Home - ' + Meteor.App.NAME });
 	},
 	fastRender: true
