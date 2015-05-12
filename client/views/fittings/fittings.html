@@ -1,9 +1,38 @@
 <template name="fittings">
-{{#each fittings}} 
-	{{stats.navigation.speed}}
-{{/each}}
+<h1>Welcome to Fourier</h1>
+<p><span class="label label-primary">Total DPS:</span> {{formatNumber totalDPS}}</p>
+<p><span class="label label-primary">Total Rep:</span> {{formatNumber totalRep 2}}</p>
 
+<table class="table table-condensed">
+<tr>
+	<th></th>
+	<th>Ship</th>
+	<th>EHP</th>
+	<th>Tank EHP</th>
+	<th>Resi</th>
+	<th>Rep</th>
+	<th>Count</th>
+	<th>Tank</th>
+</tr>
+{{#each fittings}} 
+	{{>fittingRow}}
+{{/each}}
+</table>
+<hr/>
 	{{>addFitting}}
+</template>
+
+<template name="fittingRow">
+<tr>
+	<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
+	<td>{{shipTypeName}}</td>
+	<td>{{formatNumber stats.tank.ehp}}</td>
+	<td>{{formatNumber stats.tank.ehpshield}}</td>
+	<td>{{formatNumber stats.tank.resishield 2}}</td>
+	<td>{{formatNumber stats.outgoing.shield.rr 2}}</td>
+	<td>{{count}}</td>
+	<td>{{formatNumber tank 2}}</td>
+</tr>	
 </template>
 
 <template name="addFitting">

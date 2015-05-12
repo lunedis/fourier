@@ -18,6 +18,11 @@ descriptionSchema = new SimpleSchema( {
     type: String,
     label: "Description",
     optional: true,
+  },
+  count: {
+  	type: Number,
+  	label: "Count",
+  	optional: true
   }
 });
 
