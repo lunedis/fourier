@@ -1,7 +1,6 @@
 <template name="fittings">
 <h1>Welcome to Fourier</h1>
 <p><span class="label label-primary">Total DPS:</span> {{formatNumber totalDPS}}</p>
-<p><span class="label label-primary">Total Rep:</span> {{formatNumber totalRep 2}}</p>
 
 <table class="table table-condensed">
 <tr>
@@ -15,24 +14,21 @@
 	<th>Tank</th>
 </tr>
 {{#each fittings}} 
-	{{>fittingRow}}
+	<tr>
+		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
+		<td>{{shipTypeName}}</td>
+		<td>{{formatNumber stats.tank.ehp}}</td>
+		<td>{{formatNumber stats.tank.ehpshield}}</td>
+		<td>{{formatNumber stats.tank.resishield 2}}</td>
+		<td>{{formatNumber stats.outgoing.shield.rr 2}}</td>
+		<td>{{count}}</td>
+		<td>{{formatNumber tank 2}}</td>
+		<td>{{formatNumber ttl 2}}</td>
+	</tr>	
 {{/each}}
 </table>
 <hr/>
 	{{>addFitting}}
-</template>
-
-<template name="fittingRow">
-<tr>
-	<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
-	<td>{{shipTypeName}}</td>
-	<td>{{formatNumber stats.tank.ehp}}</td>
-	<td>{{formatNumber stats.tank.ehpshield}}</td>
-	<td>{{formatNumber stats.tank.resishield 2}}</td>
-	<td>{{formatNumber stats.outgoing.shield.rr 2}}</td>
-	<td>{{count}}</td>
-	<td>{{formatNumber tank 2}}</td>
-</tr>	
 </template>
 
 <template name="addFitting">

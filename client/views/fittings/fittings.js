@@ -10,42 +10,33 @@ UI.registerHelper('formatNumber', function(context, options) {
 	}
 });
 
-var fittings = [];
-var totalRep = 0;
-Meteor.startup(function() {
-	Tracker.autorun(function() {
-		fittings = Fittings.find();
-		totalRep = _.reduce(fittings.fetch(), function(memo, ship) {
-				if(typeof ship.stats.outgoing.shield !== 'undefined') {
-					return memo + ship.stats.outgoing.shield.rr * ship.count;
-				} else {
-					return memo;
-				}
-			}, 0);
-	});
-});
-
 Template['fittings'].helpers({
 	fittings: function() {
-		return Fittings.find();
+		var fittings = Fittings.find().fetch();
+		var totalRep = _.reduce(fittings, function(memo, ship) {
+			if(typeof ship.stats.outgoing.shield !== 'undefined') {
+				return memo + ship.stats.outgoing.shield.rr * ship.count;
+			} else {
+				return memo;
+			}
+		}, 0);
+
+		_.each(fittings, function(ship) {
+			var rep = 0;
+			if (typeof ship.stats.outgoing.shield !== 'undefined') {
+				rep = ship.stats.outgoing.shield.rr;
+			}
+			ship.tank = ship.stats.tank.resishield * (totalRep - rep);
+			ship.ttl = ship.stats.tank.ehpshield / ship.tank;
+		});
+
+		console.log(fittings);
+		return fittings;
 	},
 	totalDPS: function() {
 		return _.reduce(Fittings.find().fetch(), function(memo, ship) {
 			return memo + ship.stats.damage.total * ship.count;
 		}, 0);
-	},
-	totalRep: function() {
-		return totalRep;
-	}
-});
-
-Template['fittingRow'].helpers({
-	'tank': function() {
-		if(typeof this.stats.outgoing.shield === 'undefined') {
-			return this.stats.tank.resishield * totalRep;
-		} else {
-			return this.stats.tank.resishield * (totalRep - this.stats.outgoing.shield.rr);
-		}
 	}
 });
 
