@@ -1,5 +1,3 @@
-Meteor.subscribe('fittings');
-
 UI.registerHelper('formatNumber', function(context, options) {
 	if(context) {
 		var decimals = 0;
@@ -11,8 +9,12 @@ UI.registerHelper('formatNumber', function(context, options) {
 });
 
 Template['fittings'].helpers({
-	fittings: function() {
-		var fittings = Fittings.find().fetch();
+	fittingsWithTank: function() {
+		//data-context: doctrine object
+		if(typeof this.fittings === 'undefined' || this.fittings.length === 0) {
+			return [];
+		}
+		var fittings = Fittings.find({_id: {$in: this.fittings}}).fetch();
 		var totalRep = _.reduce(fittings, function(memo, ship) {
 			if(typeof ship.stats.outgoing.shield !== 'undefined') {
 				return memo + ship.stats.outgoing.shield.rr * ship.count;
@@ -30,11 +32,13 @@ Template['fittings'].helpers({
 			ship.ttl = ship.stats.tank.ehpshield / ship.tank;
 		});
 
-		console.log(fittings);
 		return fittings;
 	},
 	totalDPS: function() {
-		return _.reduce(Fittings.find().fetch(), function(memo, ship) {
+		if(typeof this.fittings === 'undefined' || this.fittings.length === 0) {
+			return 0;
+		}
+		return _.reduce(Fittings.find({_id: {$in: this.fittings}}).fetch(), function(memo, ship) {
 			return memo + ship.stats.damage.total * ship.count;
 		}, 0);
 	}
@@ -45,3 +49,16 @@ Template['addFitting'].helpers({
 		return AddFittingsSchema;
 	}
 });
+
+AutoForm.addHooks("addFittingForm", {
+	after: {
+		method: function(error, result) {
+			if(typeof error === 'undefined') {
+				var doctrineID = Router.current().params._id;
+				Doctrines.update(doctrineID, {$push: {fittings: result}});
+			} else {
+				console.log(error);
+			}
+		}
+	}
+})

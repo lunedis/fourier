@@ -1,5 +1,6 @@
 <template name="fittings">
 <h1>Welcome to Fourier</h1>
+<h2>{{name}}</h2>
 <p><span class="label label-primary">Total DPS:</span> {{formatNumber totalDPS}}</p>
 
 <table class="table table-condensed">
@@ -13,7 +14,7 @@
 	<th>Count</th>
 	<th>Tank</th>
 </tr>
-{{#each fittings}} 
+{{#each fittingsWithTank fittings}} 
 	<tr>
 		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
 		<td>{{shipTypeName}}</td>

@@ -15,6 +15,7 @@ Doctrines.attachSchema(new SimpleSchema(
 	description: {
 		type: String,
 		label: "Description",
+		optional: true,
 		autoform: {
 			rows: 5
 		}

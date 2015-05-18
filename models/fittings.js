@@ -106,7 +106,7 @@ if(Meteor.isServer) {
 			
 			_.extend(dbEntry, parse);
 
-			Fittings.insert(dbEntry);
+			return Fittings.insert(dbEntry);
 		},
 		'updateFitting': function(modifier, documentID) {
 			check(modifier, UpdateFittingsSchema);

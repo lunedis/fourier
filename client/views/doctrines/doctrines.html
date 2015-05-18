@@ -1,0 +1,16 @@
+<template name="doctrines">
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Links</th>
+		<th>Description</th>
+	</tr>
+	{{#each doctrines}}
+		<tr>
+			<td><a href="doctrines/{{_id}}">{{name}}</a></td>
+			<td>{{links}}</td>
+			<td>{{description}}</td>
+		</tr>
+	{{/each}}
+</table>
+</template>
