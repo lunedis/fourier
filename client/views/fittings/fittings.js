@@ -18,6 +18,8 @@ Template['fittings'].helpers({
 		var totalRep = _.reduce(fittings, function(memo, ship) {
 			if(typeof ship.stats.outgoing.shield !== 'undefined') {
 				return memo + ship.stats.outgoing.shield.rr * ship.count;
+			} else if(typeof ship.stats.outgoing.armor !== 'undefined') {
+				return memo + ship.stats.outgoing.armor.rr * ship.count;
 			} else {
 				return memo;
 			}
@@ -27,6 +29,9 @@ Template['fittings'].helpers({
 			var rep = 0;
 			if (typeof ship.stats.outgoing.shield !== 'undefined') {
 				rep = ship.stats.outgoing.shield.rr;
+			}
+			if (typeof ship.stats.outgoing.armor !== 'undefined') {
+				rep = ship.stats.outgoing.armor.rr;
 			}
 			ship.tank = ship.stats.tank.resishield * (totalRep - rep);
 			ship.ttl = ship.stats.tank.ehpshield / ship.tank;
@@ -55,6 +60,7 @@ AutoForm.addHooks("addFittingForm", {
 		method: function(error, result) {
 			if(typeof error === 'undefined') {
 				var doctrineID = Router.current().params._id;
+				check(result, String);
 				Doctrines.update(doctrineID, {$push: {fittings: result}});
 			} else {
 				console.log(error);
