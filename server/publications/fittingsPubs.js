@@ -4,6 +4,10 @@ Meteor.publish('fittings', function() {
 	//Transform function
 	var calculateStats = function(doc) {
 		var fit = Desc.FromParse(doc);
+		var fleet = new Desc.Fleet();
+		fleet.setSquadCommander(Desc.getSkirmishLoki());
+		fleet.setWingCommander(Desc.getSiegeLoki());
+		fleet.addFit(fit);
 		doc.stats = fit.getStats();
 		return doc;
 	}
