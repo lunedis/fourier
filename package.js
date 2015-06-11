@@ -1,6 +1,6 @@
 Package.describe({
   name: 'leokokim:desc',
-  version: '0.1.0',
+  version: '0.2.0',
   // Brief, one-line summary of the package.
   summary: 'Helper and wrapper for libdogma',
   // URL to the Git repository containing the source code for this package.
@@ -11,20 +11,25 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('coffeescript', 'server');
   api.use('livedata', 'server');
 
   api.export('Desc', 'server');
-  
-  api.addFiles('invtypes.js', 'server');
-  api.addFiles('libdogmaffi.js', 'server');
-  api.addFiles('desc.js', 'server');
-  api.addFiles('methods.js', 'server');
+  api.export('DescFitting', 'server');
+  api.export('DescFleet', 'server');
+
+  api.addFiles('invtypes.coffee', 'server');
+  api.addFiles('libdogmaffi.coffee', 'server');
+  api.addFiles('desc.coffee', 'server');
+  api.addFiles('methods.coffee', 'server');
 });
 
 Package.onTest(function(api) {
+  api.use('coffeescript');
   api.use('tinytest');
   api.use('leokokim:desc');
-  api.addFiles('desc-tests.js');
+  api.addFiles('libdogmaffi-tests.coffee', 'server');
+  api.addFiles('desc-tests.coffee', 'server');
 });
 
 Npm.depends({
