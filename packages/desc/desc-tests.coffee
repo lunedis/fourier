@@ -12,7 +12,7 @@ TYPE_STASISWEBII = 527
 TYPE_PHASEDWEAPONTP = 19814
 
 roughly = (test, actual, expected, epsilon) ->
-  test.equal((actual - expected) < epsilon, true)
+  test.equal(Math.abs(actual - expected) < epsilon, true)
 
 Tinytest.add 'desc init', (test) ->
 	test.equal Desc.init(), true
