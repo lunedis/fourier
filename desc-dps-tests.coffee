@@ -94,3 +94,34 @@ Tinytest.add 'desc dps drone', (test) ->
 
   dps = Desc.dps stats, navigation, 30000
   roughly test, dps, 0, 1
+
+Tinytest.add 'desc dps web and tp application', (test) ->
+
+  navigation =
+    speed: 4815
+    sig: 49.7
+
+  oneWeb = Desc.applyEwar(navigation, [0.6], [])
+  twoWeb = Desc.applyEwar(navigation, [0.6, 0.6], [])
+
+  ninetyWeb = Desc.applyEwar(navigation, [0.9], [])
+  mixedWeb = Desc.applyEwar(navigation, [0.6, 0.9], [])
+  mixedWeb2 = Desc.applyEwar(navigation, [0.9, 0.6], [])
+
+  roughly test, oneWeb.speed, 1926, 1
+  roughly test, twoWeb.speed, 922, 1
+  roughly test, ninetyWeb.speed, 482, 1
+  roughly test, mixedWeb.speed, 230, 1
+  test.equal mixedWeb.speed, mixedWeb2.speed
+
+  oneTP = Desc.applyEwar(navigation, [], [0.375])
+  twoTP = Desc.applyEwar(navigation, [], [0.375, 0.375])
+  strongTP = Desc.applyEwar(navigation, [], [0.685771])
+  mixedTP = Desc.applyEwar(navigation, [], [0.685771, 0.375])
+  mixedTP2 = Desc.applyEwar(navigation, [], [0.375, 0.685771])
+
+  roughly test, oneTP.sig, 66, 1
+  roughly test, twoTP.sig, 80.1, 0.1
+  roughly test, strongTP.sig, 79.4, 0.1
+  roughly test, mixedTP.sig, 96.4, 0.1
+  test.equal mixedTP.sig, mixedTP2.sig
