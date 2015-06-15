@@ -8,6 +8,8 @@ TYPE_MEDIUMENERGYLOCUSII = 31486
 TYPE_SCORCHL = 12820
 TYPE_ISHTAR = 12005
 TYPE_CURATORII = 28213
+TYPE_STASISWEBII = 527
+TYPE_PHASEDWEAPONTP = 19814
 
 roughly = (test, actual, expected, epsilon) ->
   test.equal((actual - expected) < epsilon, true)
@@ -253,3 +255,13 @@ Tinytest.add 'desc sentry', (test) ->
   roughly test, damageStats.sentry.falloff, 12000, 1
   roughly test, damageStats.sentry.tracking, 0.03, 1e-2
   test.equal damageStats.sentry.signatureResolution, 400
+
+Tinytest.add 'desc ewar', (test) ->
+  fit = new DescFitting
+  fit.setShip TYPE_SCIMITAR
+  fit.addModule TYPE_STASISWEBII
+  fit.addModule TYPE_PHASEDWEAPONTP
+
+  ewarStats = fit.getEwar()
+  test.equal ewarStats.webs[0], 0.6
+  test.equal ewarStats.tps[0], 0.375

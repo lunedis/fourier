@@ -56,6 +56,12 @@ class DescFitting
   EFFECT_SPEEDBOOSTSIGMASS: 1254 # for mwd
   EFFECT_MJD: 4921 # for mjd
 
+  EFFECT_DECREASETARGETSPEED: 586
+  EFFECT_TARGETPAINT: 1549
+  ATTR_SPEEDFACTOR: 20
+  ATTR_SIGNATURERADIUSBONUS: 554
+
+
   # TODO: better way?
   MODES:
     34317: # Confessor
@@ -373,6 +379,28 @@ class DescFitting
 
     return result
 
+  getEwar: () ->
+    result = {webs: [], tps: []}
+    effects = [@EFFECT_DECREASETARGETSPEED, @EFFECT_TARGETPAINT]
+    for m in @modules
+      for e in effects
+        if typeHasEffect m.module, m.state, e
+          switch e
+            when @EFFECT_DECREASETARGETSPEED
+              speedFactor = @dogmaContext.getModuleAttribute(
+                m.key, @ATTR_SPEEDFACTOR)
+
+              strength = speedFactor / -100
+              result.webs.push strength
+
+            when @EFFECT_TARGETPAINT
+              signatureRadiusBonus = @dogmaContext.getModuleAttribute(
+                m.key, @ATTR_SIGNATURERADIUSBONUS)
+
+              strength = signatureRadiusBonus / 100
+              result.tps.push strength
+
+    return result
 class DescFleet
   constructor: ->
     @fleetContext = new FleetContext
