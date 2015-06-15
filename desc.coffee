@@ -1,4 +1,3 @@
-Desc = {};
 Desc.init = ->
   init()
 
@@ -56,6 +55,12 @@ class DescFitting
   EFFECT_SPEEDBOOST: 710 # for propmods
   EFFECT_SPEEDBOOSTSIGMASS: 1254 # for mwd
   EFFECT_MJD: 4921 # for mjd
+
+  EFFECT_DECREASETARGETSPEED: 586
+  EFFECT_TARGETPAINT: 1549
+  ATTR_SPEEDFACTOR: 20
+  ATTR_SIGNATURERADIUSBONUS: 554
+
 
   # TODO: better way?
   MODES:
@@ -233,7 +238,7 @@ class DescFitting
                   m.key, @ATTR_MISSILEVELOCITY)
                 flightTime = @dogmaContext.getChargeAttribute(
                   m.key, @ATTR_FLIGHTTIME)
-                range = missileVelocity * flightTime / 1e6
+                range = missileVelocity * flightTime / 1e3
 
                 result.missile.range = range
 
@@ -304,19 +309,22 @@ class DescFitting
         requiredSkill = @dogmaContext.getDroneAttribute(d.typeID, @ATTR_REQUIREDSKILL1)
         
         if requiredSkill == @TYPE_SENTRYDRONEINTERFACING
-          unless result.sentries?
-            result.sentries = {}
-            result.sentries.dps = 0
-            result.sentries.optimal = effectAttributes.range / 1000
-            result.sentries.falloff = effectAttributes.falloff / 1000
-          result.sentries.dps += dps
+          unless result.sentry?
+            result.sentry = {}
+            result.sentry.dps = 0
+            result.sentry.optimal = effectAttributes.range / 1000
+            result.sentry.falloff = effectAttributes.falloff / 1000
+            result.sentry.tracking = effectAttributes.tracking
+            sigRes = @dogmaContext.getDroneAttribute(d.typeID, @ATTR_OPTIMALSIGRADIUS)    
+            result.sentry.signatureResolution = sigRes
+          result.sentry.dps += dps
         else
-          unless result.drones?
-            result.drones = {}
-            result.drones.dps = 0
-            result.drones.range = @dogmaContext.getCharacterAttribute(@ATTR_DRONECONTROLRANGE) / 1000
-            result.drones.speed = @dogmaContext.getDroneAttribute(d.typeID, @ATTR_MAXVELOCITY)
-          result.drones.dps += dps
+          unless result.drone?
+            result.drone = {}
+            result.drone.dps = 0
+            result.drone.range = @dogmaContext.getCharacterAttribute(@ATTR_DRONECONTROLRANGE)
+            result.drone.speed = @dogmaContext.getDroneAttribute(d.typeID, @ATTR_MAXVELOCITY)
+          result.drone.dps += dps
 
     _.each result, (item) ->
       item.dps *= 1000
@@ -371,6 +379,28 @@ class DescFitting
 
     return result
 
+  getEwar: () ->
+    result = {webs: [], tps: []}
+    effects = [@EFFECT_DECREASETARGETSPEED, @EFFECT_TARGETPAINT]
+    for m in @modules
+      for e in effects
+        if typeHasEffect m.module, m.state, e
+          switch e
+            when @EFFECT_DECREASETARGETSPEED
+              speedFactor = @dogmaContext.getModuleAttribute(
+                m.key, @ATTR_SPEEDFACTOR)
+
+              strength = speedFactor / -100
+              result.webs.push strength
+
+            when @EFFECT_TARGETPAINT
+              signatureRadiusBonus = @dogmaContext.getModuleAttribute(
+                m.key, @ATTR_SIGNATURERADIUSBONUS)
+
+              strength = signatureRadiusBonus / 100
+              result.tps.push strength
+
+    return result
 class DescFleet
   constructor: ->
     @fleetContext = new FleetContext
@@ -494,6 +524,21 @@ Desc.getSkirmishLoki = ->
   f.addModule 11014
   return f
 
+Desc.getSiegeLoki = ->
+  f = new DescFitting
+  f.setShip 29990
+  f.addImplant 21888
+  f.addModule 29977
+  f.addModule 30070
+  f.addModule 30161
+  f.addModule 30135
+  f.addModule 4284
+  f.addModule 4282
+  f.addModule 4280
+  f.addModule 11014
+  f.addModule 11014
+  return f
+  
 Desc.getStandardLinks1 = ->
   f = new DescFitting
   f.setShip 29990
