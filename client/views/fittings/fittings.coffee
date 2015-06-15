@@ -54,10 +54,15 @@ Template['addFitting'].helpers
   AddFittingsSchema: ->
     return AddFittingsSchema
 
-sigres = 125;
-tracking = 0.033;
-optimal = 57600;
-falloff = 15000;
+damageStats =
+  turret:
+    signatureResolution: 125
+    tracking: 0.033
+    optimal: 57600
+    falloff: 15000
+    dps: 100
+  total: 100
+
 Template['graph'].helpers
   dmgGraph: ->
     return {
@@ -74,13 +79,7 @@ Template['graph'].helpers
         return {
           name: ship.shipTypeName
           data: _.map _.range(0,100), (distance) ->
-            trackingPart = Math.pow((ship.stats.navigation[1].speed / (distance * 1000 * tracking)) * (sigres / ship.stats.navigation[1].sig), 2)
-            rangePart = Math.pow(Math.max(0, distance * 1000 - optimal) / falloff, 2)
-            chanceToHit = Math.pow(0.5, trackingPart + rangePart)
-            if chanceToHit < 0.01
-              300 * chanceToHit
-            else
-              100 * (Math.pow(chanceToHit,2) + chanceToHit + 0.0499) / 2
+            Desc.dps damageStats, ship.stats.navigation[1], distance * 1e3
         }
     }
 
