@@ -73,7 +73,7 @@ Tinytest.add 'desc parse and missiles', (test) ->
 
   fit = Desc.FromParse parse
   stats = fit.getDamage()
-
+  
   roughly test, stats.missile.range, 63, 1
   roughly test, stats.missile.dps, 91.1, 1e-1
 
@@ -227,12 +227,14 @@ Tinytest.add 'desc fleet', (test) ->
   roughly test, stats.navigation[1].speed, 1651.3, 1e-1
   roughly test, stats.navigation[1].sig, 523, 1
 
-Tinytest.add 'desc dps application turret', (test) ->
+Tinytest.add 'desc turret', (test) ->
   fit = new DescFitting
-  fit.setShip TYPE_Oracle
+  fit.setShip TYPE_ORACLE
   fit.addModuleWithCharge TYPE_MEGAPULSELASER, TYPE_SCORCHL
   fit.addModule TYPE_MEDIUMENERGYLOCUSII
   fit.addModule TYPE_MEDIUMENERGYLOCUSII
 
-  damageStats = fit.getDamage
-  console.log damageStats
+  damageStats = fit.getDamage()
+  roughly test, damageStats.turret.optimal, 62119, 1
+  roughly test, damageStats.turret.tracking, 0.0316, 1e-3
+  test.equal damageStats.turret.signatureResolution, 400

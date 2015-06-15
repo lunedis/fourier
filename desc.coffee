@@ -1,4 +1,3 @@
-Desc = {};
 Desc.init = ->
   init()
 
@@ -508,8 +507,7 @@ Desc.getSiegeLoki = ->
   f.addModule 11014
   f.addModule 11014
   return f
-
-
+  
 Desc.getStandardLinks1 = ->
   f = new DescFitting
   f.setShip 29990
