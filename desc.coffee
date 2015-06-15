@@ -269,8 +269,8 @@ class DescFitting
               unless result.turret?
                 result.turret = {}
                 result.turret.dps = 0
-                result.turret.optimal = effectAttributes.range / 1000
-                result.turret.falloff = effectAttributes.falloff / 1000
+                result.turret.optimal = effectAttributes.range
+                result.turret.falloff = effectAttributes.falloff
                 result.turret.tracking = effectAttributes.tracking
                 sigRes = @dogmaContext.getModuleAttribute(m.key, @ATTR_OPTIMALSIGRADIUS)
                 result.turret.signatureResolution = sigRes
@@ -312,8 +312,8 @@ class DescFitting
           unless result.sentry?
             result.sentry = {}
             result.sentry.dps = 0
-            result.sentry.optimal = effectAttributes.range / 1000
-            result.sentry.falloff = effectAttributes.falloff / 1000
+            result.sentry.optimal = effectAttributes.range
+            result.sentry.falloff = effectAttributes.falloff
             result.sentry.tracking = effectAttributes.tracking
             sigRes = @dogmaContext.getDroneAttribute(d.typeID, @ATTR_OPTIMALSIGRADIUS)    
             result.sentry.signatureResolution = sigRes
