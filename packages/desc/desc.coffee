@@ -56,7 +56,6 @@ class DescFitting
   EFFECT_SPEEDBOOSTSIGMASS: 1254 # for mwd
   EFFECT_MJD: 4921 # for mjd
 
-
   EFFECT_DECREASETARGETSPEED: 586
   EFFECT_TARGETPAINT: 1549
   ATTR_SPEEDFACTOR: 20
@@ -401,7 +400,7 @@ class DescFitting
               result.tps.push strength
 
     return result
-    
+
 class DescFleet
   constructor: ->
     @fleetContext = new FleetContext

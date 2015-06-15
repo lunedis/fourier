@@ -77,6 +77,7 @@ Tinytest.add 'desc parse and missiles', (test) ->
 
   fit = Desc.FromParse parse
   stats = fit.getDamage()
+
   roughly test, stats.missile.range, 63300, 100
   roughly test, stats.missile.dps, 91.1, 1e-1
 
