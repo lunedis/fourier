@@ -8,9 +8,14 @@ InvTypes.deny
   remove: ->
     true
 
-lookup = (typeName) ->
-  type = InvTypes.findOne typeName: typeName
+Cache = {}
 
+lookup = (typeName) ->
+  if Cache[typeName]?
+    Cache[typeName]
+  else
+    Cache[typeName] = InvTypes.findOne typeName: typeName
+  
 lookupCategory = (typeName, check) ->
   type = lookup(typeName)
   if type? && check(type.categoryName)
