@@ -4,10 +4,10 @@ Meteor.publish 'fittings', ->
   # Transform function
   calculateStats = (doc) ->
     fit = Desc.FromParse doc
-    #fleet = new DescFleet
+    fleet = new DescFleet
     #fleet.setSquadCommander Desc.getSkirmishLoki()
     #fleet.setWingCommander Desc.getSiegeLoki()
-    #fleet.addFit fit
+    fleet.addFit fit
     doc.stats = fit.getStats()
     return doc
 
