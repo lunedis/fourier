@@ -30,11 +30,12 @@
 		<td>{{#each stats.navigation}}
 		{{formatNumber speed}} ({{formatNumber sig}}m)<br/>
 		{{/each}}</td>
-		<td>{{formatNumber stats.damage.total}} @{{range}}</td>
+		<td>{{formatNumber stats.damage.total}} @ {{range}}</td>
 		<td>{{count}}</td>
 		<td>
-		<button class="btn btn-default btn-xs countUp"><i class="glyphicon glyphicon-plus-sign"></i></button>
-		<button class="btn btn-default btn-xs countDown"><i class="glyphicon glyphicon-minus-sign"></i></button>
+		<button class="btn btn-success btn-xs countUp"><i class="glyphicon glyphicon-plus-sign"></i></button>
+		<button class="btn btn-danger btn-xs countDown"><i class="glyphicon glyphicon-minus-sign"></i></button>
+		<button class="btn btn-warning btn-xs delete"><i class="glyphicon glyphicon-trash"></i></button>
 		</td>
 	</tr>	
 {{/each}}

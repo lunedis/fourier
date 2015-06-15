@@ -46,8 +46,8 @@ Template['fittings'].helpers
   range: ->
     d = @stats.damage
     if d.turret?
-      optimal = (d.turret.optimal).toFixed(0)
-      falloff = (d.turret.falloff).toFixed(0)
+      optimal = (d.turret.optimal / 1000).toFixed(0)
+      falloff = (d.turret.falloff / 1000).toFixed(0)
       return "#{optimal}+#{falloff}"
     else if d.missile?
       range = (d.missile.range / 1000).toFixed(0)
@@ -58,6 +58,9 @@ Template['fittings'].events
     Fittings.update @_id, {$inc: {count: 1}}
   'click .countDown': (event) ->
     Fittings.update @_id, {$inc: {count: -1}} unless @count <= 0
+  'click .delete': (event) ->
+    if confirm('Really?')
+      Fittings.remove @_id
 
 
 Template['addFitting'].helpers
@@ -101,7 +104,7 @@ Template.dmgMitigation.rendered = ->
 
 navigation = 
   speed: 2000
-  sig: 50
+  sig: 70
 
 Template.dmgApplication.rendered = ->
   Tracker.autorun =>
@@ -116,11 +119,13 @@ Template.dmgApplication.rendered = ->
         spline:
           marker:
             enabled: false
+      yAxis:
+        min: 0
       series: _.map fittings, (ship) ->
         console.log ship.stats.damage
         return {
           name: ship.shipTypeName
-          data: _.map _.range(0,100), (distance) ->
+          data: _.map _.range(0,120), (distance) ->
             Desc.dps ship.stats.damage, navigation, distance * 1e3
         }     
 
