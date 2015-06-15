@@ -43,6 +43,16 @@ Template['fittings'].helpers
       memo + ship.stats.damage.total * ship.count;
     , 0
 
+  range: ->
+    d = @stats.damage
+    if d.turret?
+      optimal = (d.turret.optimal).toFixed(0)
+      falloff = (d.turret.falloff).toFixed(0)
+      return "#{optimal}+#{falloff}"
+    else if d.missile?
+      range = (d.missile.range / 1000).toFixed(0)
+      return "#{range}k"
+
 Template['fittings'].events
   'click .countUp': (event) ->
     Fittings.update @_id, {$inc: {count: 1}}
@@ -63,25 +73,56 @@ damageStats =
     dps: 100
   total: 100
 
-Template['graph'].helpers
-  dmgGraph: ->
-    return {
+buildDPSGraph = (doctrine) ->
+    
+
+Template.dmgMitigation.rendered = ->
+  Tracker.autorun =>
+    fittings = Fittings.find({_id: {$in: @data.fittings}, count: {$gt: 0}}).fetch()
+
+    $('#dmgMitigation').highcharts
       chart:
         type: 'spline'
       plotOptions:
+        series:
+          animation: false
         spline:
           marker:
             enabled: false
       yAxis:
         min: 0
         max: 100
-      series: _.map Fittings.find({_id: {$in: this.fittings}}).fetch(), (ship) ->
+      series: _.map fittings, (ship) ->
         return {
           name: ship.shipTypeName
           data: _.map _.range(0,100), (distance) ->
             Desc.dps damageStats, ship.stats.navigation[1], distance * 1e3
-        }
-    }
+          }
+
+navigation = 
+  speed: 2000
+  sig: 50
+
+Template.dmgApplication.rendered = ->
+  Tracker.autorun =>
+    fittings = Fittings.find({_id: {$in: @data.fittings}, count: {$gt: 0}}).fetch()
+
+    $('#dmgApplication').highcharts
+      chart:
+        type: 'spline'
+      plotOptions:
+        series:
+          animation: false
+        spline:
+          marker:
+            enabled: false
+      series: _.map fittings, (ship) ->
+        console.log ship.stats.damage
+        return {
+          name: ship.shipTypeName
+          data: _.map _.range(0,100), (distance) ->
+            Desc.dps ship.stats.damage, navigation, distance * 1e3
+        }     
 
 AutoForm.addHooks 'addFittingForm', 
   after:

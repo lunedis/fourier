@@ -5,10 +5,12 @@ Meteor.publish 'fittings', ->
   calculateStats = (doc) ->
     fit = Desc.FromParse doc
     fleet = new DescFleet
-    #fleet.setSquadCommander Desc.getSkirmishLoki()
-    #fleet.setWingCommander Desc.getSiegeLoki()
+    fleet.setSquadCommander Desc.getSkirmishLoki()
+    fleet.setWingCommander Desc.getSiegeLoki()
     fleet.addFit fit
     doc.stats = fit.getStats()
+    if doc.stats.sharpshooter?
+      doc.stats = doc.stats.defense
     return doc
 
   observer = Fittings.find().observe

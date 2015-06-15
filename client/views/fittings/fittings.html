@@ -30,7 +30,7 @@
 		<td>{{#each stats.navigation}}
 		{{formatNumber speed}} ({{formatNumber sig}}m)<br/>
 		{{/each}}</td>
-		<td>{{formatNumber stats.damage.total}}</td>
+		<td>{{formatNumber stats.damage.total}} @{{range}}</td>
 		<td>{{count}}</td>
 		<td>
 		<button class="btn btn-default btn-xs countUp"><i class="glyphicon glyphicon-plus-sign"></i></button>
@@ -39,14 +39,20 @@
 	</tr>	
 {{/each}}
 </table>
+
+{{>dmgMitigation}}
 <hr/>
-{{>graph}}
-<hr/>
-	{{>addFitting}}
+{{>dmgApplication}}
+
+{{>addFitting}}
 </template>
 
-<template name="graph">
-{{> highchartsHelper chartId="test" chartWidth="100%" chartHeight="500px" chartObject=dmgGraph}}
+<template name="dmgMitigation">
+<div id="dmgMitigation" style="width: 100%; height: 500px"></div>
+</template>
+
+<template name="dmgApplication">
+<div id="dmgApplication" style="width: 100%; height: 500px"></div>
 </template>
 
 <template name="addFitting">
