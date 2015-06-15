@@ -14,13 +14,21 @@ Desc.dps = (stats, n, distance) ->
       m.range, m.explosionRadius, m.explosionVelocity, m.drf, 
       n.speed, n.sig, distance)
 
+  if stats.sentry?
+    s = stats.sentry
+    dps += stats.sentry.dps * Desc.turretApplication(
+      s.optimal, s.falloff, s.tracking, s.signatureResolution,
+      n.speed, n.sig, distance)
+
+  if stats.drone?
+    d = stats.drone
+    dps += stats.drone.dps * Desc.droneApplication(
+      d.range, d.speed,
+      n.speed, n.sig, distance)
+
   return dps
 
 Desc.turretApplication = (optimal, falloff, tracking, sigres, speed, sig, distance) ->
-  distance *= 1000
-  optimal *= 1000
-  falloff *= 1000
-
   trackingPart = Math.pow((speed / (distance * tracking)) * (sigres / sig), 2)
   rangePart = Math.pow(Math.max(0, distance - optimal) / falloff, 2)
   chanceToHit = Math.pow(0.5, trackingPart + rangePart)
@@ -37,3 +45,10 @@ Desc.missileApplication = (range, explosionRadius, explosionVelocity, drf, speed
   sigSpeedPart = Math.pow((sig / explosionRadius) * (explosionVelocity / speed), Math.log(drf) / Math.log(5.5))
 
   Math.min(1, sigPart, sigSpeedPart)
+
+Desc.droneApplication = (range, droneSpeed, speed, sig, distance) ->
+  if distance > range
+    return 0
+  if speed > droneSpeed
+    return 0
+  return 1

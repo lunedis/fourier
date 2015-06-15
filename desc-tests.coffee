@@ -6,6 +6,8 @@ TYPE_ORACLE = 4302
 TYPE_MEGAPULSELASER = 3057
 TYPE_MEDIUMENERGYLOCUSII = 31486
 TYPE_SCORCHL = 12820
+TYPE_ISHTAR = 12005
+TYPE_CURATORII = 28213
 
 roughly = (test, actual, expected, epsilon) ->
   test.equal((actual - expected) < epsilon, true)
@@ -74,7 +76,7 @@ Tinytest.add 'desc parse and missiles', (test) ->
   fit = Desc.FromParse parse
   stats = fit.getDamage()
   
-  roughly test, stats.missile.range, 63, 1
+  roughly test, stats.missile.range, 63300, 100
   roughly test, stats.missile.dps, 91.1, 1e-1
 
 Tinytest.add 'desc drones', (test) ->
@@ -117,9 +119,9 @@ Tinytest.add 'desc drones', (test) ->
   test.equal fit.drones.inSpace.length, 1
   
   stats = fit.getDamage()
-  roughly test, stats.drones.dps, 614, 1
-  test.equal stats.drones.range, 60
-  roughly test, stats.drones.speed, 2846, 1
+  roughly test, stats.drone.dps, 614, 1
+  test.equal stats.drone.range, 60000
+  roughly test, stats.drone.speed, 2846, 1
 
 Tinytest.add 'desc cloak', (test) ->
   fit = new DescFitting()
@@ -189,7 +191,7 @@ Tinytest.add 'desc T3D', (test) ->
   roughly test, ss.navigation[1].sig, 419, 1
   roughly test, ss.damage.turret.optimal, 77964, 1
 
-Tinytest.add 'desc fleet', (test) ->
+Tinytest.add 'desc fleet drones', (test) ->
   arbitrator = """[Arbitrator, Med Mobile Armor]
   1600mm Rolled Tungsten Compact Plates
   Energized Adaptive Nano Membrane II
@@ -226,6 +228,8 @@ Tinytest.add 'desc fleet', (test) ->
   roughly test, stats.tank.ehp, 41227, 1
   roughly test, stats.navigation[1].speed, 1651.3, 1e-1
   roughly test, stats.navigation[1].sig, 523, 1
+  roughly test, stats.damage.drone.dps, 307, 1
+  roughly test, stats.damage.drone.speed, 5654, 1
 
 Tinytest.add 'desc turret', (test) ->
   fit = new DescFitting
@@ -238,3 +242,14 @@ Tinytest.add 'desc turret', (test) ->
   roughly test, damageStats.turret.optimal, 62119, 1
   roughly test, damageStats.turret.tracking, 0.0316, 1e-3
   test.equal damageStats.turret.signatureResolution, 400
+
+Tinytest.add 'desc sentry', (test) ->
+  fit = new DescFitting
+  fit.setShip TYPE_ISHTAR
+  fit.addDrone TYPE_CURATORII, 5
+
+  damageStats = fit.getDamage()
+  roughly test, damageStats.sentry.optimal, 65625, 1
+  roughly test, damageStats.sentry.falloff, 12000, 1
+  roughly test, damageStats.sentry.tracking, 0.03, 1e-2
+  test.equal damageStats.sentry.signatureResolution, 400
