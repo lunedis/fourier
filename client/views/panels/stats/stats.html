@@ -1,0 +1,47 @@
+<template name="stats">
+	<div class="panel panel-primary">
+		<div class="panel-heading">{{title}}</div>
+		<div class="panel-body">
+			{{>statsTable}}
+		</div>
+	</div>
+</template>
+
+<template name="statsTable">
+<table class="table table-condensed">
+	<tr>
+		<th></th>
+		<th>Ship</th>
+		<th><img class="fourierIcon" src="/img/fourier/ehp.png"/>EHP<br/>
+		<img class="fourierIcon" src="/img/fourier/shieldehp.png"/>Tank EHP</th>
+		<th><img class="fourierIcon" src="/img/fourier/shieldresi.png"/>Resi<br/>
+		<img class="fourierIcon" src="/img/fourier/shieldrr.png"/>Rep</th>
+		<th><img class="fourierIcon" src="/img/fourier/shieldtank.png"/>Tank<br/><img class="fourierIcon" src="/img/fourier/tanktime.png"/>Time to kill</th>
+		<th><img class="fourierIcon" src="/img/fourier/speed.png"/>Navigation</th>
+		<th><img class="fourierIcon" src="/img/fourier/dps.png"/>DPS</th>
+		<th>Count</th>
+		<th></th>
+	</tr>
+{{#each fittingsWithTank}} 
+	<tr>
+		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
+		<td>{{shipTypeName}}</td>
+		<td>{{formatNumber stats.tank.ehp}}<br/>
+		{{formatNumber stats.tank.ehpshield}}</td>
+		<td>{{formatNumber stats.tank.resishield 2}}<br/>
+		{{formatNumber stats.outgoing.shield.rr 2}}</td>
+		<td>{{formatNumber tank 2}}<br/>
+		{{formatNumber ttl 2}}</td>
+		<td>{{#each stats.navigation}}
+		{{formatNumber speed}} ({{formatNumber sig}}m)<br/>
+		{{/each}}</td>
+		<td>{{formatNumber stats.damage.total}} @ {{range}}</td>
+		<td>{{count}}</td>
+		<td>
+		<button class="btn btn-success btn-xs countUp"><i class="glyphicon glyphicon-plus-sign"></i></button>
+		<button class="btn btn-danger btn-xs countDown"><i class="glyphicon glyphicon-minus-sign"></i></button>
+		</td>
+	</tr>	
+{{/each}}
+</table>
+</template>

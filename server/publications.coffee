@@ -26,3 +26,13 @@ Meteor.publish 'fittings', ->
     observer.stop()
 
   @ready()
+
+Meteor.publish 'doctrines', ->
+  Doctrines.find()
+
+Meteor.publish 'views', ->
+  Views.find()
+
+Meteor.publish 'panels', (view) ->
+  check(view, String)
+  Panels.find view: view
