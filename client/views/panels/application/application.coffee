@@ -1,6 +1,6 @@
 Template.application.rendered = ->
-  Tracker.autorun =>
-    panelData = @data.data
+  this.autorun ->
+    panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
     $('#dmgApplication').highcharts
@@ -8,7 +8,7 @@ Template.application.rendered = ->
         type: 'spline'
       title:
         text:
-          @data.title
+          ''
       plotOptions:
         series:
           animation: false
@@ -22,4 +22,14 @@ Template.application.rendered = ->
           name: ship.shipTypeName
           data: _.map _.range(0,120), (distance) ->
             Desc.dps ship.stats.damage, panelData.targetNavigation, distance * 1e3
-        }     
+        }
+
+Template.application.events
+  'submit #update': (event) ->
+    event.preventDefault()
+    speed = event.target.speed.value
+    sig =  event.target.sig.value
+    Panels.update @_id, 
+      $set: 
+        'data.targetNavigation.speed': speed
+        'data.targetNavigation.sig': sig

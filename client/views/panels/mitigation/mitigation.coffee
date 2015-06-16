@@ -1,12 +1,12 @@
 Template.mitigation.rendered = ->
   Tracker.autorun =>
-    panelData = @data.data
+    panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
     $('#dmgMitigation').highcharts
       title:
         text:
-          @data.title
+          ''
       chart:
         type: 'spline'
       plotOptions:
