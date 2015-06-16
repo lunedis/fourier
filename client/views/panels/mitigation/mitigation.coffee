@@ -15,6 +15,10 @@ Template.mitigation.rendered = ->
         spline:
           marker:
             enabled: false
+       tooltip:
+        crosshairs: true,
+        valueDecimals: 0,
+        headerFormat: '<span>{point.key}k:</span><br/>'
       yAxis:
         min: 0
         max: panelData.attackerDamageStats.total

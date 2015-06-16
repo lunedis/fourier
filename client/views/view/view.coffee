@@ -1,6 +1,6 @@
 doctrineID = 0
 Template['view'].helpers
-	doctrineName: ->
+  doctrineName: ->
     doctrineID = @doctrine
     Doctrines.findOne(_id: @doctrine).name
   panels: ->
