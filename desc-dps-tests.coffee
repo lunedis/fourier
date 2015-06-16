@@ -1,5 +1,5 @@
 roughly = (test, actual, expected, epsilon) ->
-  test.equal((actual - expected) < epsilon, true)
+  test.equal(Math.abs(actual - expected) < epsilon, true)
 
 Tinytest.add 'desc dps turret application', (test) ->
   stats =
@@ -114,14 +114,14 @@ Tinytest.add 'desc dps web and tp application', (test) ->
   roughly test, mixedWeb.speed, 230, 1
   test.equal mixedWeb.speed, mixedWeb2.speed
 
-  oneTP = Desc.applyEwar(navigation, [], [0.375])
-  twoTP = Desc.applyEwar(navigation, [], [0.375, 0.375])
-  strongTP = Desc.applyEwar(navigation, [], [0.685771])
-  mixedTP = Desc.applyEwar(navigation, [], [0.685771, 0.375])
-  mixedTP2 = Desc.applyEwar(navigation, [], [0.375, 0.685771])
+  oneTP = Desc.applyEwar(navigation, [], [0.375], yes)
+  twoTP = Desc.applyEwar(navigation, [], [0.375, 0.375], yes)
+  strongTP = Desc.applyEwar(navigation, [], [0.685771], yes)
+  mixedTP = Desc.applyEwar(navigation, [], [0.685771, 0.375], yes)
+  mixedTP2 = Desc.applyEwar(navigation, [], [0.375, 0.685771], yes)
 
   roughly test, oneTP.sig, 66, 1
-  roughly test, twoTP.sig, 80.1, 0.1
+  roughly test, twoTP.sig, 80, 0.1
   roughly test, strongTP.sig, 79.4, 0.1
-  roughly test, mixedTP.sig, 96.4, 0.1
+  roughly test, mixedTP.sig, 96.4, 0.2
   test.equal mixedTP.sig, mixedTP2.sig

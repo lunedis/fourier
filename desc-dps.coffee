@@ -53,16 +53,14 @@ Desc.droneApplication = (range, droneSpeed, speed, sig, distance) ->
     return 0
   return 1
 
-Desc.applyEwar = (navigation, webs, tps) ->
+Desc.applyEwar = (navigation, webs, tps, mwd=no) ->
   compare = (a,b) ->
-    return a-b
-  compareReverse = (a,b) ->
     return b-a
 
   stacking = (n) ->
     Math.pow(Math.E, -Math.pow(n / 2.67, 2))
 
-  webs.sort compareReverse
+  webs.sort compare
   tps.sort compare
 
   newNav = {}
@@ -74,7 +72,11 @@ Desc.applyEwar = (navigation, webs, tps) ->
     newNav.speed *= factor
 
   for tp, i in tps
-    factor = tp * stacking(i)
+    n = i
+    if mwd
+      n = i + 1
+
+    factor = 1 + tp * stacking(n)
     newNav.sig *= factor
 
   return newNav
