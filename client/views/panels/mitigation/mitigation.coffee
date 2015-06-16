@@ -1,5 +1,5 @@
 Template.mitigation.rendered = ->
-  Tracker.autorun =>
+  Tracker.autorun ->
     panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
@@ -17,7 +17,6 @@ Template.mitigation.rendered = ->
             enabled: false
       yAxis:
         min: 0
-        max: 100
       series: _.map fittings, (ship) ->
         return {
           name: ship.shipTypeName
