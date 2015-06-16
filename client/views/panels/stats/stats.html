@@ -1,14 +1,12 @@
 <template name="stats">
-	<div class="panel panel-primary">
-		<div class="panel-heading">{{title}}</div>
-		<div class="panel-body">
-			{{>statsTable}}
-		</div>
+	<div class="panel panel-info">
+		<div class="panel-heading"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{title}}</div>
+		{{>statsTable}}
 	</div>
 </template>
 
 <template name="statsTable">
-<table class="table table-condensed">
+<table class="table">
 	<tr>
 		<th></th>
 		<th>Ship</th>
@@ -25,7 +23,8 @@
 {{#each fittingsWithTank}} 
 	<tr>
 		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
-		<td>{{shipTypeName}}</td>
+		<td><b>{{shipTypeName}}</b><br/>
+		{{subtitle}}</td>
 		<td>{{formatNumber stats.tank.ehp}}<br/>
 		{{formatNumber stats.tank.ehpshield}}</td>
 		<td>{{formatNumber stats.tank.resishield 2}}<br/>

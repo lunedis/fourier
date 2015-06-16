@@ -1,9 +1,31 @@
 <template name="mitigation">
-<div class="panel panel-primary">
-	<div class="panel-heading">{{title}}</div>
+<div class="panel panel-success">
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 
+		{{title}}
+	</div>
 	<div class="panel-body">
-		<div id="dmgMitigation" style="width: 100%; height: 500px">
+
+	</div>
+	<div class="row">
+		<div id="dmgMitigation" class="col-md-9" style="height: 500px;"></div>
+		<div class="col-md-3">
+			{{>mitigationFittings}}
+			<hr/>
 		</div>
 	</div>
 </div>
+</template>
+
+<template name="mitigationFittings">
+<ul class="list-unstyled">
+{{#each fittings}}
+	<li>
+		<label class="visibleCheck">
+			<input type="checkbox" {{visible}} />
+			{{shipTypeName}} ({{subtitle}})
+		</label>
+	</li>
+{{/each}}
+</ul>
 </template>
