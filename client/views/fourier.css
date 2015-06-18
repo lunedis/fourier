@@ -3,3 +3,7 @@ img.fourierIcon {
 	width: 32px;
 	margin-right: 4px;
 }
+
+span.settings:hover {
+	cursor: pointer;
+}

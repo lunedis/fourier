@@ -6,7 +6,6 @@ UI.registerHelper 'formatNumber', (context, options) ->
      
     context.toFixed(decimals).replace /\d(?=(\d{3})+$)/g, '$&,'
 
-
 Template.tankStatsTable.helpers
   fittingsWithTank: ->
     fitData = @data.fittings
