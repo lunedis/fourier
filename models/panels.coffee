@@ -23,3 +23,11 @@ Panels.allow
     true
   remove: ->
     true
+
+Meteor.methods
+  'updateFittingCount': (panelID, fitID, count) ->
+    check panelID, String
+    check fitID, String
+    check count, Number
+
+    Panels.update {_id: panelID, 'data.fittings.id': fitID}, {$inc: {'data.fittings.$.count': count}}
