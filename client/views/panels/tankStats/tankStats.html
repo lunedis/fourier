@@ -11,10 +11,17 @@
 				</div>
 			</span>
 		</div>
-		
+		{{#with fittingsWithTank}}
 		{{>tankStatsTable}}
 		<div class="panel-footer">
+		<ul class="list-inline">
+			<li>TotalRep: {{formatNumber totalRep}}</li>
+			<li>Minimum EHP: {{formatNumber minEHP.value}} {{minEHP.name}}</li>
+			<li>Minimum Tank: {{formatNumber minTank.value}} {{minTank.name}}</li>
+			<li>Minimum TTL: {{formatNumber minTTL.value 2}} {{minTTL.name}}</li>
+		</ul>
 		</div>
+		{{/with}}
 	</div>
 </template>
 
@@ -31,7 +38,7 @@
 		<th>Count</th>
 		<th></th>
 	</tr>
-{{#each fittingsWithTank}} 
+{{#each fittings}} 
 	<tr>
 		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
 		<td><b>{{shipTypeName}}</b><br/>

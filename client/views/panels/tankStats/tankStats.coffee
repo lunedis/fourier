@@ -6,12 +6,12 @@ UI.registerHelper 'formatNumber', (context, options) ->
      
     context.toFixed(decimals).replace /\d(?=(\d{3})+$)/g, '$&,'
 
-Template.tankStatsTable.helpers
+Template.tankStats.helpers
   fittingsWithTank: ->
     fitData = @data.fittings
 
     if !fitData?
-      return [];
+      return []
 
     fitList = _.pluck fitData, 'id'
     counts = {}
@@ -28,6 +28,16 @@ Template.tankStatsTable.helpers
         return memo
     , 0
 
+    minEHP = {name: '', value: Number.MAX_VALUE}
+    minTank = {name: '', value: Number.MAX_VALUE}
+    minTTL = {name: '', value: Number.MAX_VALUE}
+
+    min = (variable, ship, attribute) ->
+      if ship[attribute] < variable.value
+        variable.value = ship[attribute]
+        variable.name = "#{ship.shipTypeName} (#{ship.subtitle})"
+      return variable
+
     _.each fittings, (ship) =>
       rep = 0;
       if ship.stats.outgoing.shield?
@@ -40,17 +50,20 @@ Template.tankStatsTable.helpers
       ship.ttl = ship.stats.tank.ehpshield / ship.tank
       ship.count = counts[ship._id]
 
-    return fittings
+      if ship.stats.tank.ehpshield < minEHP.value
+        minEHP.value = ship.stats.tank.ehpshield
+        minEHP.name = "#{ship.shipTypeName} (#{ship.subtitle})"
 
-  range: ->
-      d = @stats.damage
-      if d.turret?
-        optimal = (d.turret.optimal / 1000).toFixed(0)
-        falloff = (d.turret.falloff / 1000).toFixed(0)
-        return "#{optimal}+#{falloff}"
-      else if d.missile?
-        range = (d.missile.range / 1000).toFixed(0)
-        return "#{range}k"
+      minTank = min minTank, ship, 'tank'
+      minTTL = min minTTL, ship, 'ttl'
+
+    ret = {}
+    ret.fittings = fittings
+    ret.totalRep = totalRep
+    ret.minEHP = minEHP
+    ret.minTank = minTank
+    ret.minTTL = minTTL
+    return ret
 
 Template.tankStatsTable.events
   'click .countUp': (event) ->
