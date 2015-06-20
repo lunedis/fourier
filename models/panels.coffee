@@ -11,6 +11,9 @@ Panels.attachSchema new SimpleSchema
     type: String
     label: "Title"
     optional: true
+  doctrine:
+    type: String
+    label: "Doctrine"
   data:
     type: Object
     optional: true

@@ -42,19 +42,20 @@ Template.application.helpers
   'TargetPresets': ->
     return TargetPresets.find {}
 
-
 Template.application.events
   'change .speed': (event) ->
-    speed = event.target.value
-    Panels.update @_id,
-      $set:
-        'data.targetNavigation.speed': speed
+    speed = parseInt(event.target.value)
+    unless speed == NaN
+      Panels.update @_id,
+        $set:
+          'data.targetNavigation.speed': speed
 
   'change .sig': (event) ->
-    sig = event.target.value
-    Panels.update @_id,
-      $set:
-        'data.targetNavigation.sig': sig
+    sig = parseInt(event.target.value)
+    unless sig == NaN
+      Panels.update @_id,
+       $set:
+         'data.targetNavigation.sig': sig
 
   'change .preset': (event) ->
     id = event.target.value

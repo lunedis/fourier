@@ -8,7 +8,7 @@ Template.mitigation.rendered = ->
     else
       maxDPS = null
 
-    $('#dmgMitigation').highcharts
+    $('#dmgMitigation' + Template.currentData()._id).highcharts
       title:
         text:
           ''
