@@ -1,6 +1,22 @@
 Template['view'].helpers
-  panels: ->
-    Panels.find view: @_id
+  rowTemplate: ->
+    if @full?
+      'fullRow'
+    else if @left?
+      'splitRow'
+
+Template.fullRow.helpers
+  panel: ->
+    Panels.findOne _id: @full
+  
+
+Template.splitRow.helpers
+  leftPanel: ->
+    Panels.findOne _id: @left
+  rightPanel: ->
+    Panels.findOne _id: @right
+  log: ->
+    console.log @
 
 Template['addFitting'].helpers
   AddFittingsSchema: ->

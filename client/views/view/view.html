@@ -1,9 +1,30 @@
 <template name="view">
 <h2>{{title}}</h2>
-{{#each panels}}
-  {{> UI.dynamic template=type data=this}}
+{{#each layout}}
+  {{> UI.dynamic template=rowTemplate data=this}}
 {{/each}}
 {{>addFitting}}
+</template>
+
+<template name="fullRow">
+{{#with panel this}}
+  {{> UI.dynamic template=type data=this}}
+{{/with}}
+</template>
+
+<template name="splitRow">
+<div class="row">
+  <div class="col-lg-6">
+    {{#with leftPanel this}}
+      {{> UI.dynamic template=type data=this}}
+    {{/with}}
+  </div>
+  <div class="col-lg-6">
+    {{#with rightPanel this}}
+      {{> UI.dynamic template=type data=this}}
+    {{/with}}
+  </div>
+</div>
 </template>
 
 <template name="addFitting">
