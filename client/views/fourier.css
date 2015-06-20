@@ -16,3 +16,7 @@ span.settings .popover {
 span.settings .popover.hidden {
 	display: none;
 }
+
+label {
+	font-weight: normal;
+}

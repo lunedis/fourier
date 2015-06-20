@@ -5,7 +5,10 @@ Template.application.rendered = ->
 
     navigation = Desc.applyEwar panelData.targetNavigation, panelData.webs, panelData.tps
 
-    maxDPS = _.max (fit.stats.damage.total for fit in fittings)
+    if panelData.staticY
+      maxDPS = _.max (fit.stats.damage.total for fit in fittings)
+    else 
+      maxDPS = null
 
     $('#dmgApplication').highcharts
       chart:

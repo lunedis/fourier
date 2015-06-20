@@ -3,6 +3,11 @@ Template.mitigation.rendered = ->
     panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
+    if panelData.staticY
+      maxDPS = panelData.attackerDamageStats.total
+    else
+      maxDPS = null
+
     $('#dmgMitigation').highcharts
       title:
         text:
@@ -21,7 +26,7 @@ Template.mitigation.rendered = ->
         headerFormat: '<span>{point.key}k:</span><br/>'
       yAxis:
         min: 0
-        max: panelData.attackerDamageStats.total
+        max: maxDPS
       xAxis:
         min: 0
       series: _.map fittings, (ship) ->
