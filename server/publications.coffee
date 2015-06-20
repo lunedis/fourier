@@ -36,3 +36,6 @@ Meteor.publish 'views', ->
 Meteor.publish 'panels', (view) ->
   check(view, String)
   Panels.find view: view
+
+Meteor.publish 'targetpresets', ->
+  TargetPresets.find()

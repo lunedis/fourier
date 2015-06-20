@@ -8,7 +8,19 @@
 		{{>fittingSelect}}
 	{{/panelHeader}}
 	<div class="panel-body">
-
+		<p>
+			<form class="form-inline update">
+				<div class="form-group">
+					<label for="speed">Speed</label> 
+					<input type="text" class="form-control input-sm" id="speed" value="{{data.targetNavigation.speed}}">
+				</div>
+				<div class="form-group">
+					<label for="sig">Sig</label> 
+					<input type="text" class="form-control input-sm" id="sig" value="{{data.targetNavigation.sig}}">
+				</div>
+				<button type="submit" class="btn btn-sm btn-danger">Update</button>
+			</form>
+		</p>
 	</div>
 	<div id="dmgMitigation" style="height: 500px; width: 100%"></div>	
 </div>

@@ -26,7 +26,7 @@ Router.route '/view/:_id',
           return
         Views.findOne this.params._id
   waitOn: ->
-    [Meteor.subscribe('views'),Meteor.subscribe('panels', this.params._id), Meteor.subscribe('doctrines'),Meteor.subscribe('fittings')]
+    [Meteor.subscribe('views'),Meteor.subscribe('panels', this.params._id), Meteor.subscribe('doctrines'),Meteor.subscribe('fittings'), Meteor.subscribe('targetpresets')]
   fastRender: true
 
 Router.route '/doctrines',

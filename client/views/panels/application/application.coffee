@@ -38,15 +38,33 @@ Template.application.rendered = ->
             Desc.dps ship.stats.damage, navigation, distance * 1e3
         }
 
+Template.application.helpers
+  'TargetPresets': ->
+    return TargetPresets.find {}
+
+
 Template.application.events
-  'submit #update': (event) ->
-    event.preventDefault()
-    speed = event.target.speed.value
-    sig =  event.target.sig.value
-    Panels.update @_id, 
-      $set: 
+  'change .speed': (event) ->
+    speed = event.target.value
+    Panels.update @_id,
+      $set:
         'data.targetNavigation.speed': speed
+
+  'change .sig': (event) ->
+    sig = event.target.value
+    Panels.update @_id,
+      $set:
         'data.targetNavigation.sig': sig
+
+  'change .preset': (event) ->
+    id = event.target.value
+    unless id == ''
+      preset = TargetPresets.findOne _id: id
+      Panels.update @_id,
+        $set:
+          'data.targetNavigation.sig': preset.sig
+          'data.targetNavigation.speed': preset.speed
+
 
   'click .plusEwar': (event) ->
     update = {$push: {}}

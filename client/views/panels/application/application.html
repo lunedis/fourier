@@ -9,33 +9,43 @@
 		{{/panelHeader}}
 		<div class="panel-body">
 			<p>
-				<form class="form-inline" id="update">
+				<form class="form-inline">
 					<div class="form-group">
-						<label for="speed">Speed</label> 
-						<input type="text" class="form-control input-sm" id="speed" value="{{data.targetNavigation.speed}}">
+						<label for="speed">Speed: </label> 
+						<input type="text" class="form-control input-sm speed" value="{{data.targetNavigation.speed}}" size="5">
 					</div>
 					<div class="form-group">
-						<label for="sig">Sig</label> 
-						<input type="text" class="form-control input-sm" id="sig" value="{{data.targetNavigation.sig}}">
+						<label for="sig">Sig: </label> 
+						<input type="text" class="form-control input-sm sig" value="{{data.targetNavigation.sig}}" size="6">
 					</div>
-				  <button type="submit" class="btn btn-sm btn-danger">Update</button>
-				  <button class="btn btn-sm btn-default plusEwar" data-target="webs" data-value="0.6">
-				  	+ Web
-				  </button>
-				  <button class="btn btn-sm btn-default minusEwar" data-target="webs">
-				  	- Web
-				  </button>
-				  <button class="btn btn-sm btn-default plusEwar" data-target="tps" data-value="0.375">
-				  	+ TP
-				  </button>
-				  <button class="btn btn-sm btn-default plusEwar" data-target="tps" data-value="0.6857">
-				  	+ strong TP
-				  </button>
-				  <button class="btn btn-sm btn-default minusEwar" data-target="tps">
-				  	- TP
-				  </button>
+					<div class="form-group">
+						<label for="preset">Load preset: </label>
+						<select class="form-control input-sm preset" name="preset" value="">
+							<option value=""></option>
+						{{#each TargetPresets}}
+							<option value="{{_id}}">{{name}} ({{speed}}/{{sig}})</option>
+						{{/each}}
+						</select>
+					</div>
 				</form>
 			</p>
+			<p>
+				<button class="btn btn-sm btn-default plusEwar" data-target="webs" data-value="0.6">
+					+ Web
+				</button>
+				<button class="btn btn-sm btn-default minusEwar" data-target="webs">
+					- Web
+				</button>
+				<button class="btn btn-sm btn-default plusEwar" data-target="tps" data-value="0.375">
+					+ TP
+				</button>
+				<button class="btn btn-sm btn-default plusEwar" data-target="tps" data-value="0.6857">
+					+ strong TP
+				</button>
+				<button class="btn btn-sm btn-default minusEwar" data-target="tps">
+					- TP
+				</button>
+				</p>
 		</div>
 		<div id="dmgApplication" style="height: 500px; width:100%"></div>
 	</div>
