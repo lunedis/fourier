@@ -9,7 +9,7 @@ Router.route '/views',
   name: 'views'
   action: ->
     @render 'views',
-      @data: ->
+      data: ->
         if !@ready
           return
         Views.find {}
@@ -41,9 +41,9 @@ Router.route '/doctrines',
     Meteor.subscribe 'doctrines'
 
 Router.route '/doctrine/:_id',
-  name: 'view'
+  name: 'doctrine'
   action: ->
-    @render 'doctrine'
+    @render 'doctrine',
       data: ->
         if !@ready
           return
