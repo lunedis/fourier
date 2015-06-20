@@ -1,18 +1,13 @@
 <template name="mitigation">
 <div class="panel panel-success">
-	<div class="panel-heading">
+	{{#panelHeader}}
 		<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 
-		{{>panelHeader}}
-	</div>
+	{{else}}
+		{{>fittingSelect}}
+	{{/panelHeader}}
 	<div class="panel-body">
 
 	</div>
-	<div class="row">
-		<div id="dmgMitigation" class="col-md-9" style="height: 500px;"></div>
-		<div class="col-md-3">
-			{{>fittingSelect}}
-			<hr/>
-		</div>
-	</div>
+	<div id="dmgMitigation" style="height: 500px; width: 100%"></div>	
 </div>
 </template>

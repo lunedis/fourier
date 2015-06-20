@@ -7,3 +7,12 @@ img.fourierIcon {
 span.settings:hover {
 	cursor: pointer;
 }
+
+span.settings .popover {
+	left: -268px; top: -38px;
+	display: block;
+	cursor: auto;
+}
+span.settings .popover.hidden {
+	display: none;
+}

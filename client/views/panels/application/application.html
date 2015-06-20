@@ -1,6 +1,10 @@
 <template name="application">
 	<div class="panel panel-danger">
-		<div class="panel-heading"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> {{>panelHeader}}</div>
+		{{#panelHeader}}
+			<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 
+		{{else}}
+			{{>fittingSelect}}
+		{{/panelHeader}}
 		<div class="panel-body">
 			<p>
 				<form class="form-inline" id="update">
@@ -31,11 +35,6 @@
 				</form>
 			</p>
 		</div>
-		<div class="row">
-			<div id="dmgApplication" class="col-md-9" style="height: 500px"></div>
-			<div class="col-md-3">
-				{{>fittingSelect}}
-			</div>
-		</div>
+		<div id="dmgApplication" style="height: 500px; width:100%"></div>
 	</div>
 </template>

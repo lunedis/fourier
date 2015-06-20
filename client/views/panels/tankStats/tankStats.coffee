@@ -67,12 +67,12 @@ Template.tankStats.helpers
 
 Template.tankStatsTable.events
   'click .countUp': (event) ->
-    panel = Template.parentData(2).data
+    panel = Template.parentData()
 
     Meteor.call 'updateFittingCount', panel._id, @_id, 1
 
   'click .countDown': (event) ->
-    panel = Template.parentData(2).data
+    panel = Template.parentData()
     count = (_.findWhere panel.data.fittings, {id: @_id}).count
 
     unless count <= 0

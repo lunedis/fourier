@@ -1,7 +1,3 @@
-Template.tankStats.events
-  'click .settings': (event) ->
-    $('div', event.target).toggle()
-
 Template.fittingCountSelect.helpers
   fittings: ->
     fitData = @data.fittings

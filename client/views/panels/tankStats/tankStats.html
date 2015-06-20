@@ -1,27 +1,21 @@
 <template name="tankStats">
 	<div class="panel panel-info" style="position:relative;">
-		<div class="panel-heading">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
-			{{>panelHeader}} 
-			<span class="glyphicon glyphicon-cog pull-right settings">
-				<div class="popover fade left in" role="tooltip" style="left: -268px; top: -39px; display: block;">
-					<div class="arrow" style="top: 20%;"></div>
-					<h3 class="popover-title">Settings</h3>
-					<div class="popover-content">{{>fittingCountSelect}}</div>
-				</div>
-			</span>
-		</div>
-		{{#with fittingsWithTank}}
+	{{#panelHeader}}
+		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+	{{else}}
+		{{>fittingCountSelect}}
+	{{/panelHeader}}
+	{{#with fittingsWithTank}}
 		{{>tankStatsTable}}
 		<div class="panel-footer">
-		<ul class="list-inline">
-			<li>TotalRep: {{formatNumber totalRep}}</li>
-			<li>Minimum EHP: {{formatNumber minEHP.value}} {{minEHP.name}}</li>
-			<li>Minimum Tank: {{formatNumber minTank.value}} {{minTank.name}}</li>
-			<li>Minimum TTL: {{formatNumber minTTL.value 2}} {{minTTL.name}}</li>
-		</ul>
+			<div class="row">
+				<div class="col-md-3 col-xs-6">TotalRep: <b>{{formatNumber totalRep}}</b></div>
+				<div class="col-md-3 col-xs-6">Minimum EHP: <b>{{formatNumber minEHP.value}}</b><br/>{{minEHP.name}}</div>
+				<div class="col-md-3 col-xs-6">Minimum Tank: <b>{{formatNumber minTank.value}}</b><br/>{{minTank.name}}</div>
+				<div class="col-md-3 col-xs-6">Minimum TTL: <b>{{formatNumber minTTL.value 2}}</b><br/> {{minTTL.name}}</div>
+			</div>
 		</div>
-		{{/with}}
+	{{/with}}
 	</div>
 </template>
 
