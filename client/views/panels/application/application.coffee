@@ -41,6 +41,8 @@ Template.application.rendered = ->
 Template.application.helpers
   'TargetPresets': ->
     return TargetPresets.find {}
+  'percent': (number) ->
+    return (number * 100).toFixed(0) + "%"
 
 Template.application.events
   'change .speed': (event) ->
