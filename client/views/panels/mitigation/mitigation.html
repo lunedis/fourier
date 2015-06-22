@@ -9,17 +9,7 @@
 	{{/panelHeader}}
 	<div class="panel-body">
 		<p>
-			<form class="form-inline update">
-				<div class="form-group">
-					<label for="speed">Speed</label> 
-					<input type="text" class="form-control input-sm" id="speed" value="{{data.targetNavigation.speed}}">
-				</div>
-				<div class="form-group">
-					<label for="sig">Sig</label> 
-					<input type="text" class="form-control input-sm" id="sig" value="{{data.targetNavigation.sig}}">
-				</div>
-				<button type="submit" class="btn btn-sm btn-danger">Update</button>
-			</form>
+			{{>damageStats data.attackerDamageStats}}
 		</p>
 		<p>
 			{{>ewar}}
@@ -27,4 +17,20 @@
 	</div>
 	<div id="dmgMitigation{{_id}}" style="height: 500px; width: 100%"></div>	
 </div>
+</template>
+
+<template name="damageStats">
+	{{> UI.dynamic template=type data=this}}
+</template>
+
+<template name="damageStatsTurret">
+{{#with turret}}
+	{{formatNumber dps}} DPS @ {{formatNumberK optimal}}+{{formatNumberK falloff}} with {{formatNumber tracking 3}} ({{signatureResolution}})
+{{/with}}
+</template>
+
+<template name="damageStatsMissile">
+{{#with missile}}
+	{{formatNumber dps}} DPS @ {{formatNumberK range 1}} ({{formatNumber explosionRadius}}m / {{explosionVelocity}} m/s / {{drf}})
+{{/with}}
 </template>
