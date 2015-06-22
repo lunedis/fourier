@@ -33,6 +33,7 @@ Template.mitigation.rendered = ->
         return {
           name: ship.shipTypeName
           data: _.map _.range(0,100), (distance) ->
-            Desc.dps panelData.attackerDamageStats, ship.stats.navigation[1], distance * 1e3
+            nav = Desc.applyEwar ship.stats.navigation[1], panelData.webs, panelData.tps
+            Desc.dps panelData.attackerDamageStats, nav, distance * 1e3
           }
 
