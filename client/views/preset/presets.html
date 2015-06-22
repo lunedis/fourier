@@ -1,0 +1,32 @@
+<template name="presets">
+<h2>Target Presets</h2>
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Speed</th>
+		<th>Sig</th>
+		<th>MWD</th>
+	</tr>
+	{{#each targetPresets}}
+		<tr>
+			<td><a href="/targetPreset/{{_id}}">{{name}}</a></td>
+			<td>{{speed}}</td>
+			<td>{{sig}}</td>
+			<td>{{mwd}}</td>
+		</tr>
+	{{/each}}
+</table>
+<h2>Attacker Presets</h2>
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Stats</th>
+	</tr>
+	{{#each attackerPresets}}
+		<tr>
+			<td><a href="/targetPreset/{{_id}}">{{name}}</a></td>
+			<td>{{damageStats}}</td>
+		</tr>
+	{{/each}}
+</table>
+</template>

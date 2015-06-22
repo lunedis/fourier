@@ -38,4 +38,7 @@ Meteor.publish 'panels', (view) ->
   Panels.find view: view
 
 Meteor.publish 'targetpresets', ->
-  TargetPresets.find()
+  TargetPresets.find {}
+
+Meteor.publish 'attackerpresets', ->
+  AttackerPresets.find {}
