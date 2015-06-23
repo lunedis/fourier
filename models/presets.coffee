@@ -31,15 +31,15 @@
 
 TargetPresets.attachSchema TargetPresetsStoreSchema
 
-TargetPresets.allow
-  insert: ->
-    true
-  update: ->
-    true
-  remove: ->
-    true
-
 if Meteor.isServer
+  TargetPresets.allow
+    insert: ->
+      true
+    update: ->
+      true
+    remove: ->
+      true
+
   Meteor.methods
     'addTargetPresetEFT': (document) ->
       Desc.init()
@@ -53,7 +53,7 @@ if Meteor.isServer
       navigations = fit.getNavigation()
       delete document.eft
       delete document.links
-      
+
       document.speed = navigations[1].speed
       document.sig = navigations[1].sig
       document.mwd = navigations[1].typeName.indexOf('Microwarpdrive') > -1
@@ -62,65 +62,67 @@ if Meteor.isServer
 
 @AttackerPresets = new Mongo.Collection 'attackerpresets'
 
-AttackerPresets.attachSchema new SimpleSchema
+AttackerPresetsStoreSchema = new SimpleSchema
   name:
     type: String
-    label: "Name"
+    label: 'Name'
   total:
     type: Number
     label: 'Total DPS'
+    decimal: true
 
   turret:
     type: Object
-    label: "Turret"
+    label: 'Turret'
     optional: true
-  'turret.dps':
-    type: Number
-    label: 'Turret DPS'
-    decimal: true
-  'turret.tracking':
-    type: Number
-    label: 'Turret Tracking'
-    decimal: true
-  'turret.optimal':
-    type: Number
-    label: 'Turret Optimal'
-  'turret.falloff':
-    type: Number
-    label: 'Turret Falloff'
-  'turret.signatureResolution':
-    type: Number
-    label: 'Turret SigRes'
-
+    blackbox: true
   missile:
     type: Object
     label: "Missile"
     optional: true
-  'missile.dps':
-    type: Number
-    label: 'Missile DPS'
-    decimal: true
-  'missile.range':
-    type: Number
-    label: 'Missile Range'
-    decimal: true
-  'missile.explosionVelocity':
-    type: Number
-    label: 'Missile Explosion Velocity'
-    decimal: true
-  'missile.explosionRadius':
-    type: Number
-    label: 'Missile Explosion Radius'
-    decimal: true
-  'missile.drf':
-    type: Number
-    label: 'Missile DRF'
-    decimal: true
+    blackbox: true
+  drone:
+    type: Object
+    label: 'Drone'
+    optional: true
+    blackbox: true
+  sentry:
+    type: Object
+    label: 'sentry'
+    optional: true
+    blackbox: true
 
-AttackerPresets.allow
-  insert: ->
-    true
-  update: ->
-    true
-  remove: ->
-    true
+
+@AttackerPresetsEFTSchema = new SimpleSchema
+  name:
+    type: String
+    label: 'Name'
+  eft:
+    type: String
+    label: 'EFT Fitting'
+    autoform:
+      rows: 5
+
+AttackerPresets.attachSchema AttackerPresetsStoreSchema
+
+if Meteor.isServer
+  AttackerPresets.allow
+    insert: ->
+      true
+    update: ->
+      true
+    remove: ->
+      true
+
+  Meteor.methods
+    'addAttackerPresetEFT': (document) ->
+      Desc.init()
+      check document, AttackerPresetsEFTSchema
+      fit = Desc.FromEFT document.eft
+      
+      damage = fit.getDamage()
+      delete document.eft
+
+      _.extend document, damage
+      check document, AttackerPresetsStoreSchema
+      AttackerPresets.insert document

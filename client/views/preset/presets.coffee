@@ -10,6 +10,10 @@ Template.addTargetPreset.helpers
   TargetPresetsEFTSchema: ->
     return TargetPresetsEFTSchema
 
+Template.addAttackerPreset.helpers
+  AttackerPresetsEFTSchema: ->
+    return AttackerPresetsEFTSchema
+
 AutoForm.hooks
   AddTargetPresetForm:
     onSuccess: (operation, fit) ->
