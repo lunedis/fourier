@@ -6,6 +6,10 @@ UI.registerHelper 'formatNumber', (context, options) ->
      
     context.toFixed(decimals).replace /\d(?=(\d{3})+$)/g, '$&,'
 
+UI.registerHelper 'noDecimals', (context, options) ->
+  if context
+    context.toFixed(0)
+
 UI.registerHelper 'formatNumberK', (context, options) ->
   if context
     decimals = 0

@@ -8,13 +8,19 @@
 				<th>Speed</th>
 				<th>Sig</th>
 				<th>MWD</th>
+				<th></th>
 			</tr>
 			{{#each targetPresets}}
 				<tr>
 					<td><a href="/presets/editTarget/{{_id}}">{{name}}</a></td>
-					<td>{{speed}}</td>
-					<td>{{sig}}</td>
+					<td>{{formatNumber speed}}</td>
+					<td>{{formatNumber sig}}</td>
 					<td>{{mwd}}</td>
+					<td>
+						<button class="btn btn-warning btn-xs targetPresetDelete">
+							<span class="glyphicon glyphicon-trash"></span>
+						</button>
+					</td>
 				</tr>
 			{{/each}}
 		</table>
@@ -29,11 +35,17 @@
 			<tr>
 				<th>Name</th>
 				<th>Stats</th>
+				<th></th>
 			</tr>
 			{{#each attackerPresets}}
 				<tr>
 					<td><a href="/presets/editAttacker/{{_id}}">{{name}}</a></td>
 					<td>{{>damageStats}}</td>
+					<td>
+						<button class="btn btn-warning btn-xs attackerPresetDelete">
+							<span class="glyphicon glyphicon-trash"></span>
+						</button>
+					</td>
 				</tr>
 			{{/each}}
 		</table>
@@ -43,19 +55,35 @@
 
 </template>
 
+<template name="back">
+	<a href="/presets" role="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Back to Presets</a><br/><br/>
+</template>
+
 <template name="CenterForm">
 <div class="row">
 	<div class="col-sm-4 col-sm-offset-4">
-	<a href="/presets" role="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Back to Presets</a><br/><br/>
+	{{>back}}
 	{{>Template.contentBlock}}
 	</div>
 </div>
 </template>
 
 <template name="addTargetPreset">
-{{#CenterForm}}
-	{{> quickForm id="AddTargetPresetForm" collection="TargetPresets" type="insert"}}
-{{/CenterForm}}
+<div class="row">
+	<div class="col-md-2 col-md-offset-2">
+	{{>back}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-3 col-md-offset-2">
+		<h3>Manual Insert</h3>
+		{{> quickForm id="AddTargetPresetForm" collection="TargetPresets" type="insert" }}
+	</div>
+	<div class="col-md-3 col-md-offset-2">
+		<h3>EFT Insert</h3>
+		{{> quickForm id="AddTargetPresetEFTForm" schema=TargetPresetsEFTSchema type="method" meteormethod="addTargetPresetEFT"}}
+	</div>
+</div>
 </template>
 
 <template name="addAttackerPreset">

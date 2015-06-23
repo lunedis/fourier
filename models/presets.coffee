@@ -1,18 +1,35 @@
 @TargetPresets = new Mongo.Collection 'targetpresets'
 
-TargetPresets.attachSchema new SimpleSchema
+@TargetPresetsStoreSchema = new SimpleSchema
   name:
     type: String
     label: "Name"
   speed:
     type: Number
     label: "Speed"
+    decimal: true
   sig:
     type: Number
     label: "Signature Radius"
+    decimal: true
   mwd:
     type: Boolean
     label: "MWD activated yes/no"
+
+@TargetPresetsEFTSchema = new SimpleSchema
+  name:
+    type: String
+    label: "Name"
+  eft:
+    type: String
+    label: "EFT Fitting"
+    autoform:
+      rows: 5
+  links:
+    type: Boolean
+    label: "Links yes/no"
+
+TargetPresets.attachSchema TargetPresetsStoreSchema
 
 TargetPresets.allow
   insert: ->
@@ -22,6 +39,26 @@ TargetPresets.allow
   remove: ->
     true
 
+if Meteor.isServer
+  Meteor.methods
+    'addTargetPresetEFT': (document) ->
+      Desc.init()
+      check document, TargetPresetsEFTSchema
+      fit = Desc.FromEFT document.eft
+      if document.links
+        fleet = new DescFleet
+        fleet.setSquadCommander Desc.getSkirmishLoki()
+        fleet.addFit fit
+
+      navigations = fit.getNavigation()
+      delete document.eft
+      delete document.links
+      
+      document.speed = navigations[1].speed
+      document.sig = navigations[1].sig
+      document.mwd = navigations[1].typeName.indexOf('Microwarpdrive') > -1
+      check document, TargetPresetsStoreSchema
+      TargetPresets.insert document
 
 @AttackerPresets = new Mongo.Collection 'attackerpresets'
 
