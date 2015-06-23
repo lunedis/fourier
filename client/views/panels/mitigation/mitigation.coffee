@@ -36,3 +36,15 @@ Template.mitigation.rendered = ->
             nav = Desc.applyEwar ship.stats.navigation[1], panelData.webs, panelData.tps
             Desc.dps panelData.attackerDamageStats, nav, distance * 1e3
           }
+
+Template.mitigation.helpers
+  AttackerPresets: ->
+    AttackerPresets.find {}
+
+Template.mitigation.events
+  'change .preset': (event) ->
+    id = event.target.value
+    unless id == ''
+      preset = AttackerPresets.findOne _id: id
+      Panels.update @_id,
+        $set: 'data.attackerDamageStats': preset

@@ -9,24 +9,25 @@ Template.presets.events
 Template.addTargetPreset.helpers
   TargetPresetsEFTSchema: ->
     return TargetPresetsEFTSchema
+Template.editTargetPreset.helpers
+  TargetPresetsEFTSchema: ->
+    return TargetPresetsEFTSchema
 
 Template.addAttackerPreset.helpers
   AttackerPresetsEFTSchema: ->
     return AttackerPresetsEFTSchema
+Template.editAttackerPreset.helpers
+  AttackerPresetsEFTSchema: ->
+    return AttackerPresetsEFTSchema
+
+SuccessRedirectPresets = 
+  onSuccess: (operation, fit) ->
+    Router.go 'presets'
 
 AutoForm.hooks
-  AddTargetPresetForm:
-    onSuccess: (operation, fit) ->
-      Router.go 'presets'
-  AddTargetPresetEFTForm:
-    onSuccess: (operation, fit) ->
-      Router.go 'presets'
-  AddAttackerPresetForm:
-    onSuccess: (operation, fit) ->
-      Router.go 'presets'
-  EditTargetPresetForm:
-    onSuccess: (operation, fit) ->
-      Router.go 'presets'
-  EditAttackerPresetForm:
-    onSuccess: (operation, fit) ->
-      Router.go 'presets'
+  AddTargetPresetForm: SuccessRedirectPresets
+  AddTargetPresetEFTForm: SuccessRedirectPresets
+  AddAttackerPresetForm: SuccessRedirectPresets
+  EditTargetPresetForm: SuccessRedirectPresets
+  EditTargetPresetEFTForm: SuccessRedirectPresets
+  EditAttackerPresetEFTForm: SuccessRedirectPresets

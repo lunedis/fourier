@@ -39,7 +39,7 @@ Template.application.rendered = ->
         }
 
 Template.application.helpers
-  'TargetPresets': ->
+  TargetPresets: ->
     return TargetPresets.find {}
     
 

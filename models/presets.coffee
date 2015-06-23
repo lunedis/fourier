@@ -40,25 +40,41 @@ if Meteor.isServer
     remove: ->
       true
 
+  transformNavigation = (obj) ->
+    Desc.init()
+    fit = Desc.FromEFT obj.eft
+    if obj.links? and obj.links
+      fleet = new DescFleet
+      fleet.setSquadCommander Desc.getSkirmishLoki()
+      fleet.addFit fit
+
+    navigations = fit.getNavigation()
+    delete obj.eft
+    delete obj.links
+
+    obj.speed = navigations[1].speed
+    obj.sig = navigations[1].sig
+    obj.mwd = navigations[1].typeName.indexOf('Microwarpdrive') > -1
+
+    return obj
+
   Meteor.methods
     'addTargetPresetEFT': (document) ->
-      Desc.init()
       check document, TargetPresetsEFTSchema
-      fit = Desc.FromEFT document.eft
-      if document.links
-        fleet = new DescFleet
-        fleet.setSquadCommander Desc.getSkirmishLoki()
-        fleet.addFit fit
+      
+      document = transformNavigation document 
 
-      navigations = fit.getNavigation()
-      delete document.eft
-      delete document.links
-
-      document.speed = navigations[1].speed
-      document.sig = navigations[1].sig
-      document.mwd = navigations[1].typeName.indexOf('Microwarpdrive') > -1
       check document, TargetPresetsStoreSchema
       TargetPresets.insert document
+    'editTargetPresetEFT': (modifier, documentID) ->
+      check modifier, TargetPresetsEFTSchema
+      check documentID, String
+
+      modifier.$set = transformNavigation modifier.$set
+
+      check modifier, TargetPresetsStoreSchema
+      TargetPresets.update documentID, modifier
+
 
 @AttackerPresets = new Mongo.Collection 'attackerpresets'
 
@@ -114,15 +130,29 @@ if Meteor.isServer
     remove: ->
       true
 
+  transformDamage = (obj) ->
+    Desc.init()
+    fit = Desc.FromEFT obj.eft
+
+    damage = fit.getDamage()
+    delete obj.eft
+
+    _.extend obj, damage
+    return obj
+
   Meteor.methods
     'addAttackerPresetEFT': (document) ->
-      Desc.init()
       check document, AttackerPresetsEFTSchema
-      fit = Desc.FromEFT document.eft
       
-      damage = fit.getDamage()
-      delete document.eft
+      document = transformDamage document
 
-      _.extend document, damage
       check document, AttackerPresetsStoreSchema
       AttackerPresets.insert document
+    'editAttackerPresetEFT': (modifier, documentID) ->
+      check modifier, AttackerPresetsEFTSchema
+      check documentID, String
+
+      modifier.$set = transformDamage modifier.$set
+
+      check modifier, AttackerPresetsStoreSchema
+      AttackerPresets.update documentID, modifier
