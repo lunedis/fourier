@@ -14,6 +14,7 @@ Panels.attachSchema new SimpleSchema
   doctrine:
     type: String
     label: "Doctrine"
+    optional: true
   data:
     type: Object
     optional: true

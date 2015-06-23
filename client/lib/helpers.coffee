@@ -19,4 +19,4 @@ UI.registerHelper 'formatNumberK', (context, options) ->
     (context / 1000).toFixed(decimals)
 
 UI.registerHelper 'log', (context, options) ->
-  console.log context
+  console.log @
