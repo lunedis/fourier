@@ -13,3 +13,6 @@ UI.registerHelper 'formatNumberK', (context, options) ->
       decimals = options
     
     (context / 1000).toFixed(decimals)
+
+UI.registerHelper 'log', (context, options) ->
+  console.log context

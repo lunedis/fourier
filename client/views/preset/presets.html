@@ -1,32 +1,77 @@
 <template name="presets">
-<h2>Target Presets</h2>
-<table class="table">
-	<tr>
-		<th>Name</th>
-		<th>Speed</th>
-		<th>Sig</th>
-		<th>MWD</th>
-	</tr>
-	{{#each targetPresets}}
-		<tr>
-			<td><a href="/targetPreset/{{_id}}">{{name}}</a></td>
-			<td>{{speed}}</td>
-			<td>{{sig}}</td>
-			<td>{{mwd}}</td>
-		</tr>
-	{{/each}}
-</table>
-<h2>Attacker Presets</h2>
-<table class="table">
-	<tr>
-		<th>Name</th>
-		<th>Stats</th>
-	</tr>
-	{{#each attackerPresets}}
-		<tr>
-			<td><a href="/targetPreset/{{_id}}">{{name}}</a></td>
-			<td>{{damageStats}}</td>
-		</tr>
-	{{/each}}
-</table>
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+	<h2>Target Presets</h2>
+		<table class="table">
+			<tr>
+				<th>Name</th>
+				<th>Speed</th>
+				<th>Sig</th>
+				<th>MWD</th>
+			</tr>
+			{{#each targetPresets}}
+				<tr>
+					<td><a href="/presets/editTarget/{{_id}}">{{name}}</a></td>
+					<td>{{speed}}</td>
+					<td>{{sig}}</td>
+					<td>{{mwd}}</td>
+				</tr>
+			{{/each}}
+		</table>
+	</div>
+</div>
+<p class="text-center"><a href="/presets/addTarget" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add New Target Preset</a></p>
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<h2>Attacker Presets</h2>
+		<table class="table">
+			<tr>
+				<th>Name</th>
+				<th>Stats</th>
+			</tr>
+			{{#each attackerPresets}}
+				<tr>
+					<td><a href="/presets/editAttacker/{{_id}}">{{name}}</a></td>
+					<td>{{>damageStats}}</td>
+				</tr>
+			{{/each}}
+		</table>
+	</div>
+</div>
+<p class="text-center"><a href="/presets/addAttacker" class="btn btn-danger"><span class="glyphicon glyphicon-plus-sign"></span> Add New Attacker Preset</a></p>
+
+</template>
+
+<template name="CenterForm">
+<div class="row">
+	<div class="col-sm-4 col-sm-offset-4">
+	<a href="/presets" role="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Back to Presets</a><br/><br/>
+	{{>Template.contentBlock}}
+	</div>
+</div>
+</template>
+
+<template name="addTargetPreset">
+{{#CenterForm}}
+	{{> quickForm id="AddTargetPresetForm" collection="TargetPresets" type="insert"}}
+{{/CenterForm}}
+</template>
+
+<template name="addAttackerPreset">
+{{#CenterForm}}
+	{{> quickForm id="AddAttackerPresetForm" collection="AttackerPresets" type="insert"}}
+{{/CenterForm}}
+</template>
+
+<template name="editTargetPreset">
+{{#CenterForm}}
+	{{> quickForm id="EditTargetPresetForm" doc=this collection="TargetPresets" type="update"}}
+{{/CenterForm}}
+</template>
+
+<template name="editAttackerPreset">
+{{#CenterForm}}
+	{{> quickForm id="EditAttackerPresetForm" doc=this collection="AttackerPresets" type="update"}}
+{{/CenterForm}}
 </template>
