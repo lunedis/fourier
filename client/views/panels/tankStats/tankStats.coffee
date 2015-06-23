@@ -1,3 +1,12 @@
+subAttr = (obj, attr1, attr2) ->
+  key = attr1 + attr2
+  obj[key]
+
+Template.tankStats.onCreated ->
+  this.autorun =>
+    doctrineID = Template.currentData().doctrine
+    Template.currentData().tanktype = Doctrines.findOne(doctrineID).links
+
 Template.tankStats.helpers
   fittingsWithTank: ->
     fitData = @data.fittings
@@ -12,9 +21,9 @@ Template.tankStats.helpers
 
     fittings = Fittings.find({_id: {$in: fitList}}).fetch()
     totalRep = _.reduce fittings, (memo, ship) =>
-      if ship.stats.outgoing.shield?
+      if @tanktype == 'shield' and ship.stats.outgoing.shield?
         memo + ship.stats.outgoing.shield.rr * counts[ship._id]
-      else if ship.stats.outgoing.armor?
+      else if @tanktype == 'armor' and ship.stats.outgoing.armor?
         memo + ship.stats.outgoing.armor.rr * counts[ship._id]
       else
         return memo
@@ -32,18 +41,19 @@ Template.tankStats.helpers
 
     _.each fittings, (ship) =>
       rep = 0;
-      if ship.stats.outgoing.shield?
+      if @tanktype == 'shield' and ship.stats.outgoing.shield?
         rep = ship.stats.outgoing.shield.rr
 
-      if ship.stats.outgoing.armor?
+      if @tanktype == 'armor' and ship.stats.outgoing.armor?
         rep = ship.stats.outgoing.armor.rr
-
-      ship.tank = ship.stats.tank.resishield * (totalRep - rep)
-      ship.ttl = ship.stats.tank.ehpshield / ship.tank
+      
+      console.log subAttr(ship.stats.tank, 'resi', @tanktype)
+      ship.tank = subAttr(ship.stats.tank, 'resi', @tanktype) * (totalRep - rep)
+      ship.ttl = subAttr(ship.stats.tank, 'ehp', @tanktype) / ship.tank
       ship.count = counts[ship._id]
 
-      if ship.stats.tank.ehpshield < minEHP.value
-        minEHP.value = ship.stats.tank.ehpshield
+      if subAttr(ship.stats, 'ehp', @tanktype) < minEHP.value
+        minEHP.value = subAttr(ship.stats, 'ehp', @tanktype)
         minEHP.name = "#{ship.shipTypeName} (#{ship.subtitle})"
 
       minTank = min minTank, ship, 'tank'
@@ -56,6 +66,18 @@ Template.tankStats.helpers
     ret.minTank = minTank
     ret.minTTL = minTTL
     return ret
+    
+Template.tankStatsTable.helpers
+  tanktype: ->
+    Template.instance().tanktype
+  tankattr: (obj, attr, decimals=0) ->
+    return formatNumber subAttr(obj, attr, Template.parentData(2).tanktype), decimals
+  outgoingattr: (obj, attr, decimals=0) ->
+    key = Template.parentData(2).tanktype
+    if obj[key]?
+      formatNumber obj[key][attr], decimals
+    else
+      ''
 
 Template.tankStatsTable.events
   'click .countUp': (event) ->

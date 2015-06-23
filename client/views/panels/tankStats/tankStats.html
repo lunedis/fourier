@@ -26,10 +26,10 @@
 		<th></th>
 		<th>Ship</th>
 		<th>{{> fourierIcon path="ehp"}} EHP<br/>
-		{{> fourierIcon path="shieldehp"}} Tank EHP</th>
-		<th>{{> fourierIcon path="shieldresi"}} Resi<br/>
-		{{> fourierIcon path="shieldrr"}} Rep</th>
-		<th>{{> fourierIcon path="shieldtank"}} Tank<br/>
+		{{> fourierIcon tanktype=../tanktype path="ehp"}} Tank EHP</th>
+		<th>{{> fourierIcon tanktype=../tanktype path="resi"}} Resi<br/>
+		{{> fourierIcon tanktype=../tanktype path="rr"}} Rep</th>
+		<th>{{> fourierIcon tanktype=../tanktype path="tank"}} Tank<br/>
 		{{> fourierIcon path="tanktime"}} Time to kill</th>
 		<th>Count</th>
 		<th></th>
@@ -40,9 +40,9 @@
 		<td><b>{{shipTypeName}}</b><br/>
 		{{subtitle}}</td>
 		<td>{{formatNumber stats.tank.ehp}}<br/>
-		{{formatNumber stats.tank.ehpshield}}</td>
-		<td>{{formatNumber stats.tank.resishield 2}}<br/>
-		{{formatNumber stats.outgoing.shield.rr 2}}</td>
+		{{tankattr stats.tank 'ehp'}}</td>
+		<td>{{tankattr stats.tank 'resi' 2}}<br/>
+		{{outgoingattr stats.outgoing 'rr' 2}}</td>
 		<td>{{formatNumber tank 2}}<br/>
 		{{formatNumber ttl 2}}</td>
 		<td>{{count}}</td>
@@ -56,5 +56,5 @@
 </template>
 
 <template name="fourierIcon">
-	<img class="fourierIcon hidden-sm hidden-xs" src="/img/fourier/{{path}}.png"/>
+	<img class="fourierIcon hidden-sm hidden-xs" src="/img/fourier/{{tanktype}}{{path}}.png"/>
 </template>
