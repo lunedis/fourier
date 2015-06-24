@@ -74,11 +74,11 @@ Fittings.attachSchema StoreFittingsSchema
 if Meteor.isServer
   Fittings.allow
     insert: ->
-      true
+      Meteor.user()
     update: ->
-      true
+      Meteor.user()
     remove: ->
-      true
+      Meteor.user()
 
   transformStats = (obj) ->
     Desc.init()

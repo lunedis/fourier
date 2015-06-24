@@ -34,11 +34,11 @@ TargetPresets.attachSchema TargetPresetsStoreSchema
 if Meteor.isServer
   TargetPresets.allow
     insert: ->
-      true
+      Meteor.user()
     update: ->
-      true
+      Meteor.user()
     remove: ->
-      true
+      Meteor.user()
 
   transformNavigation = (obj) ->
     Desc.init()

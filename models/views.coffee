@@ -15,8 +15,8 @@ Views.attachSchema new SimpleSchema
 
 Views.allow
   insert: ->
-    true
+    Meteor.user()
   update: ->
-    true
+    Meteor.user()
   remove: ->
-    true
+    Meteor.user()

@@ -22,11 +22,11 @@ Panels.attachSchema new SimpleSchema
 
 Panels.allow
   insert: ->
-    true
+    Meteor.user()
   update: ->
-    true
+    Meteor.user()
   remove: ->
-    true
+    Meteor.user()
 
 Meteor.methods
   'updateFittingCount': (panelID, fitID, count) ->
