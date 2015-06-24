@@ -36,7 +36,7 @@ Template.tankStats.helpers
     min = (variable, ship, attribute) ->
       if ship[attribute] < variable.value
         variable.value = ship[attribute]
-        variable.name = "#{ship.shipTypeName} (#{ship.subtitle})"
+        variable.name = "#{ship.shipTypeName} (#{ship.name})"
       return variable
 
     _.each fittings, (ship) =>
@@ -47,14 +47,13 @@ Template.tankStats.helpers
       if @tanktype == 'armor' and ship.stats.outgoing.armor?
         rep = ship.stats.outgoing.armor.rr
       
-      console.log subAttr(ship.stats.tank, 'resi', @tanktype)
       ship.tank = subAttr(ship.stats.tank, 'resi', @tanktype) * (totalRep - rep)
       ship.ttl = subAttr(ship.stats.tank, 'ehp', @tanktype) / ship.tank
       ship.count = counts[ship._id]
 
-      if subAttr(ship.stats, 'ehp', @tanktype) < minEHP.value
-        minEHP.value = subAttr(ship.stats, 'ehp', @tanktype)
-        minEHP.name = "#{ship.shipTypeName} (#{ship.subtitle})"
+      if subAttr(ship.stats.tank, 'ehp', @tanktype) < minEHP.value
+        minEHP.value = subAttr(ship.stats.tank, 'ehp', @tanktype)
+        minEHP.name = "#{ship.shipTypeName} (#{ship.name})"
 
       minTank = min minTank, ship, 'tank'
       minTTL = min minTTL, ship, 'ttl'

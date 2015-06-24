@@ -3,7 +3,15 @@ Template.application.rendered = ->
     panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
-    navigation = Desc.applyEwar panelData.targetNavigation, panelData.webs, panelData.tps
+    webs = []
+    if panelData.webs?
+      webs = panelData.webs
+
+    tps = []
+    if panelData.tps?
+      tps = panelData.tps
+
+    navigation = Desc.applyEwar panelData.targetNavigation, webs, tps
 
     if panelData.staticY
       maxDPS = _.max (fit.stats.damage.total for fit in fittings)

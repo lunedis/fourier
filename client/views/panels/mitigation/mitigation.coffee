@@ -8,6 +8,14 @@ Template.mitigation.rendered = ->
     else
       maxDPS = null
 
+    webs = []
+    if panelData.webs?
+      webs = panelData.webs
+
+    tps = []
+    if panelData.tps?
+      tps = panelData.tps
+
     $('#dmgMitigation' + Template.currentData()._id).highcharts
       title:
         text:
@@ -33,7 +41,7 @@ Template.mitigation.rendered = ->
         return {
           name: ship.shipTypeName
           data: _.map _.range(0,100), (distance) ->
-            nav = Desc.applyEwar ship.stats.navigation[1], panelData.webs, panelData.tps
+            nav = Desc.applyEwar ship.stats.navigation[1], webs, tps
             Desc.dps panelData.attackerDamageStats, nav, distance * 1e3
           }
 
