@@ -1,24 +1,10 @@
 @Fittings = new Mongo.Collection 'fittings'
 
 mandatoryDescriptionSchema = new SimpleSchema
-  subtitle:
+  name:
     type: String
     max: 100
-    label: "Subtitle"
-  role:
-    type: String
-    label: "Role"
-    max: 50
-
-descriptionSchema = new SimpleSchema
-  description:
-    type: String
-    label: "Description"
-    optional: true
-  count:
-    type: Number
-    label: "Count"
-    optional: true
+    label: "Name"
 
 loadoutSchema = new SimpleSchema
   shipTypeID:
@@ -37,6 +23,12 @@ loadoutSchema = new SimpleSchema
     blackbox: true
     autoform:
       omit: true
+  stats: 
+    type: Object
+    label: "Stats"
+    blackbox: true
+    autoform:
+      omit: true
 
 eftSchema = new SimpleSchema
   eft:
@@ -44,6 +36,21 @@ eftSchema = new SimpleSchema
     label: "EFT"
     autoform:
       rows: 5
+  links:
+    type: String
+    allowedValues: ['none', 'kiting', 'armor', 'shield']
+    label: 'Links'
+    autoform:
+      label: false
+      afFieldInput:
+        type: 'hidden'
+  doctrine:
+    type: String
+    label: 'Doctrine'
+    autoform:
+      label: false
+      afFieldInput:
+        type: 'hidden'
 
 eftSchemaOptional = new SimpleSchema
   eft:
@@ -54,48 +61,52 @@ eftSchemaOptional = new SimpleSchema
       rows: 5
 
 StoreFittingsSchema = new SimpleSchema(
-  [mandatoryDescriptionSchema, descriptionSchema, loadoutSchema])
+  [mandatoryDescriptionSchema, loadoutSchema])
 
 @AddFittingsSchema = new SimpleSchema(
   [mandatoryDescriptionSchema, eftSchema])
 
 @UpdateFittingsSchema = new SimpleSchema(
-  [mandatoryDescriptionSchema, descriptionSchema, eftSchemaOptional])
+  [mandatoryDescriptionSchema, eftSchemaOptional])
 
 Fittings.attachSchema StoreFittingsSchema
 
-Fittings.allow
-  insert: ->
-    true
-  update: ->
-    true
-  remove: ->
-    true
-
 if Meteor.isServer
+  Fittings.allow
+    insert: ->
+      true
+    update: ->
+      true
+    remove: ->
+      true
+
+  transformStats = (obj) ->
+    Desc.init()
+    parse = Desc.ParseEFT obj.eft
+    fit = Desc.FromParse parse
+
+    unless obj.links == 'none'
+      fleet = new DescFleet()
+      fleet.setSquadCommander Desc.getSkirmishLoki()
+      if obj.links == 'armor'
+        fleet.setWingCommander Desc.getArmorLoki()
+      else if obj.links == 'shield'
+        fleet.setWingCommander Desc.getSiegeLoki()
+
+      fleet.addFit fit
+
+    delete obj.eft
+    delete obj.links
+    _.extend obj, parse
+    obj.stats = fit.getStats()
+    return obj
+
   Meteor.methods
-    'addFitting': (document) ->
-      check document, AddFittingsSchema 
-
-      Desc.init()
-      parse = Desc.ParseEFT document.eft
-      dbEntry = subtitle: document.subtitle, role: document.role, description: ""
-
-      _.extend dbEntry, parse
-
-      Fittings.insert dbEntry
-
-    'updateFitting': (modifier, documentID) ->
-      check modifier, UpdateFittingsSchema
-      check documentID, String
-
-      if modifier.$set.eft?
-        eft = modifier.$set.eft
-        Desc.init()
-
-        parse = Desc.parseEFT eft
-
-        delete modifier.$set.eft
-        _.extend modifier.$set, parse
-
-      Fittings.update documentID, modifier
+    addFitting: (document) ->
+      check document, AddFittingsSchema
+      doctrineID = document.doctrine
+      delete document.doctrine
+      document = transformStats document
+      check document, StoreFittingsSchema
+      fitID = Fittings.insert document
+      Doctrines.update doctrineID, {$push: {fittings: fitID}}

@@ -19,6 +19,8 @@ Doctrines.attachSchema new SimpleSchema
 		type: Array
 		label: "Fittings"
 		optional: true
+		autoform:
+			omit: true
 	'fittings.$':
 		type: String
 

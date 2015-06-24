@@ -59,14 +59,14 @@ if Meteor.isServer
     return obj
 
   Meteor.methods
-    'addTargetPresetEFT': (document) ->
+    addTargetPresetEFT: (document) ->
       check document, TargetPresetsEFTSchema
       
       document = transformNavigation document 
 
       check document, TargetPresetsStoreSchema
       TargetPresets.insert document
-    'editTargetPresetEFT': (modifier, documentID) ->
+    editTargetPresetEFT: (modifier, documentID) ->
       check modifier, TargetPresetsEFTSchema
       check documentID, String
 

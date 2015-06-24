@@ -16,3 +16,6 @@ Router.route '/doctrine/:_id',
       data: ->
         if !@ready
           return
+        Doctrines.findOne _id: @params._id
+  waitOn: ->
+    [Meteor.subscribe('doctrines'), Meteor.subscribe('fittings')]
