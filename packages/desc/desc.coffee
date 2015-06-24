@@ -538,6 +538,21 @@ Desc.getSiegeLoki = ->
   f.addModule 11014
   f.addModule 11014
   return f
+
+Desc.getArmorLoki = ->
+  f = new DescFitting
+  f.setShip 29990
+  f.addImplant 13209
+  f.addModule 29977
+  f.addModule 30070
+  f.addModule 30161
+  f.addModule 30135
+  f.addModule 4264
+  f.addModule 4266
+  f.addModule 4262
+  f.addModule 11014
+  f.addModule 11014
+  return f
   
 Desc.getStandardLinks1 = ->
   f = new DescFitting
