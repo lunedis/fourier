@@ -1,5 +1,5 @@
 Template.application.rendered = ->
-  this.autorun ->
+  this.autorun =>
     panelData = Template.currentData().data
     fittings = Fittings.find({_id: {$in: panelData.fittings}}).fetch()
 
@@ -18,7 +18,7 @@ Template.application.rendered = ->
     else 
       maxDPS = null
 
-    $('#dmgApplication').highcharts
+    @$('.dmgApplication').highcharts
       chart:
         type: 'spline'
       title:
