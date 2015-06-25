@@ -1,0 +1,51 @@
+<template name="overview">
+	<div class="panel panel-primary" style="position:relative;">
+	{{#panelHeader}}
+		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+	{{else}}
+		{{> standardSettings}}
+		{{>fittingCountSelect}}
+	{{/panelHeader}}
+	{{#with fittings}}
+		{{>overviewTable}}
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-md-4">TotalDPS: <b>{{formatNumber totalDPS}}</b></div>
+				<div class="col-md-4">Minimum EHP: <b>{{formatNumber minEHP.value}}</b><br/>{{minEHP.name}}</div>
+				<div class="col-md-4">Minimum Speed: <b>{{formatNumber minSpeed.value}}</b><br/>{{minSpeed.name}}</div>
+			</div>
+		</div>
+	{{/with}}
+	</div>
+</template>
+
+<template name="overviewTable">
+<table class="table">
+	<tr>
+		<th></th>
+		<th>Ship</th>
+		<th>{{> fourierIcon path="ehp"}} EHP</th>
+		<th>{{> fourierIcon path="speed"}} Speed / Sig</th>
+		<th>{{> fourierIcon path="dps"}} DPS</th>
+		<th>Count</th>
+		<th></th>
+	</tr>
+{{#each fittings}} 
+	<tr>
+		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_32.png"/></td>
+		<td><b>{{shipTypeName}}</b> ({{name}})</td>
+		<td>{{formatNumber stats.tank.ehp}}</td>
+		<td>
+			{{#with navigation}}
+				{{formatNumber speed}} m/s / {{formatNumber sig}}m
+			{{/with}}
+		</td>
+		<td>{{>damageStats stats.damage}}</td>
+		<td>{{count}}</td>
+		<td>
+			{{> countButtons}}
+		</td>
+	</tr>	
+{{/each}}
+</table>
+</template>

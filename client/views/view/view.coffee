@@ -42,7 +42,7 @@ Template.newPanel.helpers
   doctrines: ->
     Doctrines.find {}
   types: ->
-    ['tankStats', 'application', 'mitigation']
+    ['overview', 'tankStats', 'application', 'mitigation']
 
 Template.newPanel.events
   'submit .newPanel': (event) ->
