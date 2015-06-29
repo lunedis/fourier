@@ -277,6 +277,8 @@ class DescFitting
               
               result.turret.dps += dps
             when @EFFECT_SMARTBOMB
+              multiplier = @dogmaContext.getModuleAttribute(
+                m.key, @ATTR_DAMAGEMULTIPLIER)
               emDamage = @dogmaContext.getModuleAttribute(
                 m.key, @ATTR_EMDAMAGE)
               explosiveDamage = @dogmaContext.getModuleAttribute(
@@ -286,7 +288,7 @@ class DescFitting
               thermalDamage = @dogmaContext.getModuleAttribute(
                 m.key, @ATTR_THERMALDAMAGE)
               dps = multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage) / effectAttributes.duration
-              unless result.turret?
+              unless result.smartbomb?
                 result.smartbomb = {}
                 result.smartbomb.dps = 0
                 result.smartbomb.range = effectAttributes.range / 1000

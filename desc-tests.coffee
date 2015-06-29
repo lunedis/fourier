@@ -10,6 +10,7 @@ TYPE_ISHTAR = 12005
 TYPE_CURATORII = 28213
 TYPE_STASISWEBII = 527
 TYPE_PHASEDWEAPONTP = 19814
+TYPE_SSMEDIUMPLASMASMARTBOMB = 14220
 
 roughly = (test, actual, expected, epsilon) ->
   test.equal(Math.abs(actual - expected) < epsilon, true)
@@ -124,6 +125,17 @@ Tinytest.add 'desc drones', (test) ->
   roughly test, stats.drone.dps, 614, 1
   test.equal stats.drone.range, 60000
   roughly test, stats.drone.speed, 2846, 1
+
+Tinytest.add 'desc smartbomb', (test) ->
+  fit = new DescFitting()
+
+  fit.setShip TYPE_ISHTAR
+  fit.addModule TYPE_SSMEDIUMPLASMASMARTBOMB
+
+  stats = fit.getDamage()
+  roughly test, stats.total, 18, 1
+  roughly test, stats.smartbomb.dps, 18, 1
+  roughly test, stats.smartbomb.range, 5.4, 0.1
 
 Tinytest.add 'desc cloak', (test) ->
   fit = new DescFitting()
