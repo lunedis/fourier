@@ -10,10 +10,26 @@
 		{{>tankStatsTable}}
 		<div class="panel-footer">
 			<div class="row">
-				<div class="col-md-3 col-xs-6">TotalRep: <b>{{formatNumber totalRep}}</b></div>
-				<div class="col-md-3 col-xs-6">Minimum EHP: <b>{{formatNumber minEHP.value}}</b><br/>{{minEHP.name}}</div>
-				<div class="col-md-3 col-xs-6">Minimum Tank: <b>{{formatNumber minTank.value}}</b><br/>{{minTank.name}}</div>
-				<div class="col-md-3 col-xs-6">Minimum TTL: <b>{{formatNumber minTTL.value 2}}</b><br/> {{minTTL.name}}</div>
+				<div class="col-md-3 col-xs-6">TotalRep: 
+					{{#if greaterZero totalRep}}
+						<b>{{formatNumber totalRep}}</b>
+					{{else}}
+						<i>unavailable</i>
+					{{/if}}
+				</div>
+				<div class="col-md-3 col-xs-6">Minimum EHP: 
+					{{#minimum minEHP}}
+						<b>{{formatNumber minEHP.value}}</b>
+					{{/minimum}}
+				</div>
+					<div class="col-md-3 col-xs-6">Minimum Tank: 	{{#minimum minTank}}
+						<b>{{formatNumber minTank.value}}</b>
+					{{/minimum}}
+				</div>
+				<div class="col-md-3 col-xs-6">Minimum TTL:
+					{{#minimum minTTL}}
+						<b>{{formatNumber minTTL.value 2}}</b>s
+					{{/minimum}}</div>
 			</div>
 		</div>
 	{{/with}}
@@ -21,9 +37,10 @@
 </template>
 
 <template name="tankStatsTable">
-<table class="table">
+<table class="table table-bordered table-striped">
+<thead>
 	<tr>
-		<th></th>
+		<th style="width: 64px;"></th>
 		<th>Ship</th>
 		<th>{{> fourierIcon path="ehp"}} EHP<br/>
 		{{> fourierIcon tanktype=../tanktype path="ehp"}} Tank EHP</th>
@@ -34,6 +51,8 @@
 		<th>Count</th>
 		<th></th>
 	</tr>
+</thead>
+<tbody>
 {{#each fittings}} 
 	<tr>
 		<td><img style="height: 48px; width: 48px;" src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
@@ -51,6 +70,7 @@
 		</td>
 	</tr>	
 {{/each}}
+</tbody>
 </table>
 </template>
 

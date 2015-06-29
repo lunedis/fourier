@@ -23,3 +23,6 @@ UI.registerHelper 'formatNumberK', (context, options) ->
 
 UI.registerHelper 'log', (context, options) ->
   console.log @
+
+UI.registerHelper 'greaterZero', (context, options) ->
+  context > 0

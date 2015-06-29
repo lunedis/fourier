@@ -47,16 +47,22 @@ Template.tankStats.helpers
       if @tanktype == 'armor' and ship.stats.outgoing.armor?
         rep = ship.stats.outgoing.armor.rr
       
-      ship.tank = subAttr(ship.stats.tank, 'resi', @tanktype) * (totalRep - rep)
-      ship.ttl = subAttr(ship.stats.tank, 'ehp', @tanktype) / ship.tank
       ship.count = counts[ship._id]
 
-      if subAttr(ship.stats.tank, 'ehp', @tanktype) < minEHP.value
-        minEHP.value = subAttr(ship.stats.tank, 'ehp', @tanktype)
-        minEHP.name = "#{ship.shipTypeName} (#{ship.name})"
+      if ship.count > 0
+        if subAttr(ship.stats.tank, 'ehp', @tanktype) < minEHP.value
+            minEHP.value = subAttr(ship.stats.tank, 'ehp', @tanktype)
+            minEHP.name = "#{ship.shipTypeName} (#{ship.name})"
 
-      minTank = min minTank, ship, 'tank'
-      minTTL = min minTTL, ship, 'ttl'
+      if (rep == totalRep and ship.count == 1) or ship.count == 0
+        ship.tank = 0
+        ship.ttl = 0
+      else
+        ship.tank = subAttr(ship.stats.tank, 'resi', @tanktype) * (totalRep - rep)
+        ship.ttl = subAttr(ship.stats.tank, 'ehp', @tanktype) / ship.tank
+
+        minTank = min minTank, ship, 'tank'
+        minTTL = min minTTL, ship, 'ttl'
 
     ret = {}
     ret.fittings = fittings

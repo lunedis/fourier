@@ -19,17 +19,19 @@ Template.overview.helpers
     minSpeed = {name: '', value: Number.MAX_VALUE}
 
     _.each fittings, (ship) =>
-      ehp = ship.stats.tank.ehp
-      if ehp < minEHP.value
-        minEHP.value = ehp
-        minEHP.name = "#{ship.shipTypeName} (#{ship.name})"
-
-      speed = ship.stats.navigation[1].speed
-      if speed < minSpeed.value
-        minSpeed.value = speed
-        minSpeed.name = "#{ship.shipTypeName} (#{ship.name})"
-
       ship.count = counts[ship._id]
+
+      if ship.count > 0      
+        ehp = ship.stats.tank.ehp
+        if ehp < minEHP.value
+          minEHP.value = ehp
+          minEHP.name = "#{ship.shipTypeName} (#{ship.name})"
+
+        speed = ship.stats.navigation[1].speed
+        if speed < minSpeed.value
+          minSpeed.value = speed
+          minSpeed.name = "#{ship.shipTypeName} (#{ship.name})"
+
 
     ret = {}
     ret.fittings = fittings
