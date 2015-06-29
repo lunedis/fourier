@@ -37,19 +37,25 @@
 </template>
 
 <template name="tankStatsTable">
-<table class="table table-bordered table-striped">
+<table class="table table-condensed table-bordered table-striped">
 <thead>
 	<tr>
-		<th style="width: 64px;"></th>
+		<th style="width: 58px;"></th>
 		<th>Ship</th>
-		<th>{{> fourierIcon path="ehp"}} EHP<br/>
-		{{> fourierIcon tanktype=../tanktype path="ehp"}} Tank EHP</th>
-		<th>{{> fourierIcon tanktype=../tanktype path="resi"}} Resi<br/>
-		{{> fourierIcon tanktype=../tanktype path="rr"}} Rep</th>
-		<th>{{> fourierIcon tanktype=../tanktype path="tank"}} Tank<br/>
-		{{> fourierIcon path="tanktime"}} Time to kill</th>
+		<th>
+			EHP<br/>
+			Tank EHP
+		</th>
+		<th>
+			Resi<br/>
+			Rep
+		</th>
+		<th>
+			Tank<br/>
+			Time to kill
+		</th>
 		<th>Count</th>
-		<th></th>
+		<th style="width: 35px;"></th>
 	</tr>
 </thead>
 <tbody>
