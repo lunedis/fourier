@@ -1,5 +1,5 @@
 Template.overview.helpers
-	fittings: ->
+  fittings: ->
     fitData = @data.fittings
 
     if !fitData?
@@ -7,9 +7,11 @@ Template.overview.helpers
 
     fitList = _.pluck fitData, 'id'
     counts = {}
+    sumCount = 0
     for fit in fitData
       counts[fit.id] = fit.count
-
+      sumCount += fit.count
+	
     fittings = Fittings.find({_id: {$in: fitList}}).fetch()
     totalDPS = _.reduce fittings, (memo, ship) =>
       return memo + ship.stats.damage.total * counts[ship._id]
@@ -38,6 +40,7 @@ Template.overview.helpers
     ret.totalDPS = totalDPS
     ret.minEHP = minEHP
     ret.minSpeed = minSpeed
+    ret.sumCount = sumCount
     return ret
 
 Template.overviewTable.helpers

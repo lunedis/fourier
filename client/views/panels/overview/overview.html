@@ -10,12 +10,14 @@
 		{{>overviewTable}}
 		<div class="panel-footer">
 			<div class="row">
-				<div class="col-md-4">TotalDPS: 
+				<div class="col-md-4">Total DPS: 
 					{{#if greaterZero totalDPS}}
 						<b>{{formatNumber totalDPS}}</b>
 					{{else}}
 						<i>unavailable</i>
 					{{/if}}
+					<br/>
+					Total Count: {{sumCount}} 
 				</div>
 				<div class="col-md-4">Minimum EHP: 
 					{{#minimum minEHP}}
@@ -37,7 +39,7 @@
 <table class="table table-striped table-condensed table-bordered">
 	<thead>
 		<tr>
-			<th style="width:42px;"></th>
+			<th style="width:58px;"></th>
 			<th>Ship</th>
 			<th>{{> fourierIcon path="ehp"}} EHP</th>
 			<th>{{> fourierIcon path="speed"}} Speed / Sig</th>
@@ -49,7 +51,7 @@
 	<tbody>
 {{#each fittings}} 
 	<tr>
-		<td><img src="http://image.eveonline.com/Type/{{shipTypeID}}_32.png"/></td>
+		<td><img style="width:48px; height; 48px" src="http://image.eveonline.com/Type/{{shipTypeID}}_64.png"/></td>
 		<td><b>{{shipTypeName}}</b> ({{name}})</td>
 		<td>{{formatNumber stats.tank.ehp}}</td>
 		<td>

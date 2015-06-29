@@ -10,7 +10,7 @@
 
 <template name="damageStatsMissile">
 {{#with missile}}
-	{{formatNumber dps}} DPS @ {{formatNumberK range 1}} ({{formatNumber explosionRadius}}m / {{explosionVelocity}} m/s / {{drf}})
+	{{formatNumber dps}} DPS @ {{formatNumberK range 1}} ({{formatNumber explosionRadius}}m / {{formatNumber explosionVelocity}} m/s / {{formatNumber drf 1}})
 {{/with}}
 </template>
 
