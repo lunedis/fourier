@@ -35,6 +35,10 @@ lookupCategory = (typeName, check) ->
   lookupCategory typeName, (categoryName) ->
     categoryName == 'Charge'
 
+@lookupImplant = (typeName) ->
+  lookupCategory typeName, (categoryName) ->
+    categoryName == 'Implant'
+
 @lookupModule = (typeName) ->
   lookupCategory typeName, (categoryName) ->
     categoryName == 'Module' || categoryName == 'Subsystem'
