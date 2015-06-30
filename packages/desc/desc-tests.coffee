@@ -11,6 +11,7 @@ TYPE_CURATORII = 28213
 TYPE_STASISWEBII = 527
 TYPE_PHASEDWEAPONTP = 19814
 TYPE_SSMEDIUMPLASMASMARTBOMB = 14220
+TYPE_LARGEREMOTESHIELDBOOSTERII = 3608
 
 roughly = (test, actual, expected, epsilon) ->
   test.equal(Math.abs(actual - expected) < epsilon, true)
@@ -135,7 +136,7 @@ Tinytest.add 'desc smartbomb', (test) ->
   stats = fit.getDamage()
   roughly test, stats.total, 18, 1
   roughly test, stats.smartbomb.dps, 18, 1
-  roughly test, stats.smartbomb.range, 5.4, 0.1
+  roughly test, stats.smartbomb.range, 5400, 100
 
 Tinytest.add 'desc cloak', (test) ->
   fit = new DescFitting()
@@ -273,10 +274,27 @@ Tinytest.add 'desc ewar', (test) ->
   fit.setShip TYPE_SCIMITAR
   fit.addModule TYPE_STASISWEBII
   fit.addModule TYPE_PHASEDWEAPONTP
+  fit.addModule lookupModule 'Warp Disruptor II'
+  fit.addModule lookupModule 'Warp Scrambler II'
+  fit.addModule lookupModule 'Remote Sensor Dampener II'
 
   ewarStats = fit.getEwar()
-  test.equal ewarStats.webs[0], 0.6
-  test.equal ewarStats.tps[0], 0.375
+  test.equal ewarStats.webs[0].strength, 0.6
+  test.equal ewarStats.webs[0].range, 10000
+  test.equal ewarStats.tps[0].strength, 0.375
+  test.equal ewarStats.tps[0].optimal, 45000
+  test.equal ewarStats.points[0].range, 24000
+  test.equal ewarStats.damps[0].strength, 0.19125
+  test.equal ewarStats.scrams[0].range, 9000
+
+Tinytest.add 'desc outgoing', (test) ->
+  fit = new DescFitting
+  fit.setShip TYPE_SCIMITAR
+  fit.addModule TYPE_LARGEREMOTESHIELDBOOSTERII
+
+  outgoingStats = fit.getOutgoing()
+  roughly test, outgoingStats.shield.rr, 85.3, 0.1
+  roughly test, outgoingStats.shield.range, 71400, 100
 
 Tinytest.add 'desc imps', (test) ->
   eos = """[Eos, Tremble]
