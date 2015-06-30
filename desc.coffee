@@ -56,10 +56,17 @@ class DescFitting
   EFFECT_SPEEDBOOSTSIGMASS: 1254 # for mwd
   EFFECT_MJD: 4921 # for mjd
 
-  EFFECT_DECREASETARGETSPEED: 586
+  # EWAR
+  EFFECT_WEB: 586
   EFFECT_TARGETPAINT: 1549
+  EFFECT_DAMP: 3584
+  EFFECT_POINT: 39
+  EFFECT_SCRAM: 5934
+  EFFECT_ECM: 1358
+
   ATTR_SPEEDFACTOR: 20
   ATTR_SIGNATURERADIUSBONUS: 554
+  ATTR_MAXTARGETRANGEBONUS: 309
 
 
   # TODO: better way?
@@ -204,95 +211,105 @@ class DescFitting
 
     return navigation
 
-  getDamage: ->
-    result = {}
-    effects = [@EFFECT_MISSILES, @EFFECT_PROJECTILEFIRED, @EFFECT_TARGETATTACK, @EFFECT_SMARTBOMB]
-
+  forModulesAndEffects: (callbacks) ->
     for m in @modules
-      for e in effects
-        if typeHasEffect(m.module, m.state, e)
+      for e,c of callbacks
+        if typeHasEffect m.module, m.state, e
           effectAttributes = @dogmaContext.getLocationEffectAttributes(
             DOGMA.LOC_Module, m.key, e)
 
           if effectAttributes.duration < 1e-300
             continue
 
-          switch e
-            when @EFFECT_MISSILES
-              multiplier = @dogmaContext.getCharacterAttribute(
-                @ATTR_MISSILEDAMAGEMULTIPLIER)
-              emDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_EMDAMAGE)
-              explosiveDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_EXPLOSIVEDAMAGE)
-              kineticDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_KINETICDAMAGE)
-              thermalDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_THERMALDAMAGE)
-              
-              dps = (multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage)) / effectAttributes.duration
-              if !result.missile?
-                result.missile = {dps: 0}
+          c effectAttributes, m
 
-                missileVelocity = @dogmaContext.getChargeAttribute(
-                  m.key, @ATTR_MISSILEVELOCITY)
-                flightTime = @dogmaContext.getChargeAttribute(
-                  m.key, @ATTR_FLIGHTTIME)
-                range = missileVelocity * flightTime / 1e3
+  getDamage: ->
+    result = {}
 
-                result.missile.range = range
+    missileDPS = (eA, m) =>
+      multiplier = @dogmaContext.getCharacterAttribute(
+        @ATTR_MISSILEDAMAGEMULTIPLIER)
+      emDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_EMDAMAGE)
+      explosiveDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_EXPLOSIVEDAMAGE)
+      kineticDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_KINETICDAMAGE)
+      thermalDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_THERMALDAMAGE)
+      
+      dps = (multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage)) / eA.duration
+      if !result.missile?
+        result.missile = {dps: 0}
 
-                explosionVelocity = @dogmaContext.getChargeAttribute(
-                  m.key, @ATTR_AOEVELOCITY)
-                explosionRadius = @dogmaContext.getChargeAttribute(
-                  m.key, @ATTR_AOEClOUDSIZE)
-                drf = @dogmaContext.getChargeAttribute(
-                  m.key, @ATTR_AOEDAMAGEREDUCTIONFACTOR)
+        missileVelocity = @dogmaContext.getChargeAttribute(
+          m.key, @ATTR_MISSILEVELOCITY)
+        flightTime = @dogmaContext.getChargeAttribute(
+          m.key, @ATTR_FLIGHTTIME)
+        range = missileVelocity * flightTime / 1e3
 
-                result.missile.explosionVelocity = explosionVelocity
-                result.missile.explosionRadius = explosionRadius
-                result.missile.drf = drf
+        result.missile.range = range
 
-              result.missile.dps += dps
-            when @EFFECT_TARGETATTACK, @EFFECT_PROJECTILEFIRED
-              multiplier = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_DAMAGEMULTIPLIER)
-              emDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_EMDAMAGE)
-              explosiveDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_EXPLOSIVEDAMAGE)
-              kineticDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_KINETICDAMAGE)
-              thermalDamage = @dogmaContext.getChargeAttribute(
-                m.key, @ATTR_THERMALDAMAGE)
-              dps = multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage) / effectAttributes.duration
-              unless result.turret?
-                result.turret = {}
-                result.turret.dps = 0
-                result.turret.optimal = effectAttributes.range
-                result.turret.falloff = effectAttributes.falloff
-                result.turret.tracking = effectAttributes.tracking
-                sigRes = @dogmaContext.getModuleAttribute(m.key, @ATTR_OPTIMALSIGRADIUS)
-                result.turret.signatureResolution = sigRes
-              
-              result.turret.dps += dps
-            when @EFFECT_SMARTBOMB
-              multiplier = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_DAMAGEMULTIPLIER)
-              emDamage = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_EMDAMAGE)
-              explosiveDamage = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_EXPLOSIVEDAMAGE)
-              kineticDamage = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_KINETICDAMAGE)
-              thermalDamage = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_THERMALDAMAGE)
-              dps = multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage) / effectAttributes.duration
-              unless result.smartbomb?
-                result.smartbomb = {}
-                result.smartbomb.dps = 0
-                result.smartbomb.range = effectAttributes.range / 1000
-              result.smartbomb.dps += dps
+        explosionVelocity = @dogmaContext.getChargeAttribute(
+          m.key, @ATTR_AOEVELOCITY)
+        explosionRadius = @dogmaContext.getChargeAttribute(
+          m.key, @ATTR_AOEClOUDSIZE)
+        drf = @dogmaContext.getChargeAttribute(
+          m.key, @ATTR_AOEDAMAGEREDUCTIONFACTOR)
+
+        result.missile.explosionVelocity = explosionVelocity
+        result.missile.explosionRadius = explosionRadius
+        result.missile.drf = drf
+
+      result.missile.dps += dps
+    turretDPS = (eA, m) =>
+      multiplier = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_DAMAGEMULTIPLIER)
+      emDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_EMDAMAGE)
+      explosiveDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_EXPLOSIVEDAMAGE)
+      kineticDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_KINETICDAMAGE)
+      thermalDamage = @dogmaContext.getChargeAttribute(
+        m.key, @ATTR_THERMALDAMAGE)
+      dps = multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage) / eA.duration
+      unless result.turret?
+        result.turret = {}
+        result.turret.dps = 0
+        result.turret.optimal = eA.range
+        result.turret.falloff = eA.falloff
+        result.turret.tracking = eA.tracking
+        sigRes = @dogmaContext.getModuleAttribute(m.key, @ATTR_OPTIMALSIGRADIUS)
+        result.turret.signatureResolution = sigRes
+      
+      result.turret.dps += dps
+    smartbombDPS = (eA, m) =>
+      multiplier = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_DAMAGEMULTIPLIER)
+      emDamage = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_EMDAMAGE)
+      explosiveDamage = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_EXPLOSIVEDAMAGE)
+      kineticDamage = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_KINETICDAMAGE)
+      thermalDamage = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_THERMALDAMAGE)
+      dps = multiplier * (emDamage + explosiveDamage + kineticDamage + thermalDamage) / eA.duration
+      unless result.smartbomb?
+        result.smartbomb = {}
+        result.smartbomb.dps = 0
+        result.smartbomb.range = eA.range
+      result.smartbomb.dps += dps
+
+
+    callbacks = {}
+    callbacks[@EFFECT_MISSILES] = missileDPS
+    callbacks[@EFFECT_TARGETATTACK] = turretDPS
+    callbacks[@EFFECT_PROJECTILEFIRED] = turretDPS
+    callbacks[@EFFECT_SMARTBOMB] = smartbombDPS
+
+    @forModulesAndEffects callbacks
 
     for d in @drones.inSpace
       e = @EFFECT_TARGETATTACK
@@ -342,39 +359,31 @@ class DescFitting
   getOutgoing: ->
     result = {}
 
-    effects = [@EFFECT_ARMORRR, @EFFECT_SHIELDTRANSFER]
+    callbacks = {}
 
-    for m in @modules
-      for e in effects
-        if typeHasEffect m.module, m.state, e
-          effectAttributes = @dogmaContext.getLocationEffectAttributes(
-            DOGMA.LOC_Module, m.key, e)
+    callbacks[@EFFECT_ARMORRR] = (eA, m) =>
+      amount = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_ARMORRRAMOUNT)
 
-          if effectAttributes.duration < 1e-300
-            continue
+      unless result.armor?
+        result.armor = {}
+        result.armor.range = eA.range
+        result.armor.rr = 0
 
-          switch e
-            when @EFFECT_ARMORRR
-              amount = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_ARMORRRAMOUNT)
+      result.armor.rr += amount / eA.duration
 
-              unless result.armor?
-                result.armor = {}
-                result.armor.range = effectAttributes.range / 1000
-                result.armor.rr = 0
+    callbacks[@EFFECT_SHIELDTRANSFER] = (eA, m) =>
+      amount = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_SHIELDBONUS)
 
-              result.armor.rr += amount / effectAttributes.duration
+      unless result.shield?
+        result.shield = {}
+        result.shield.range = eA.range
+        result.shield.rr = 0
 
-            when @EFFECT_SHIELDTRANSFER
-              amount = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_SHIELDBONUS)
+      result.shield.rr += amount / eA.duration
 
-              unless result.shield?
-                result.shield = {}
-                result.shield.range = effectAttributes.range / 1000
-                result.shield.rr = 0
-
-              result.shield.rr += amount / effectAttributes.duration
+    @forModulesAndEffects callbacks
 
     _.each result, (item) ->
       item.rr *= 1000
@@ -382,25 +391,63 @@ class DescFitting
     return result
 
   getEwar: () ->
-    result = {webs: [], tps: []}
-    effects = [@EFFECT_DECREASETARGETSPEED, @EFFECT_TARGETPAINT]
-    for m in @modules
-      for e in effects
-        if typeHasEffect m.module, m.state, e
-          switch e
-            when @EFFECT_DECREASETARGETSPEED
-              speedFactor = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_SPEEDFACTOR)
+    result = {}
+    
+    callbacks = {}
+    
+    callbacks[@EFFECT_WEB] = (eA, m) =>
+      speedFactor = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_SPEEDFACTOR)
 
-              strength = speedFactor / -100
-              result.webs.push strength
+      strength = speedFactor / -100
 
-            when @EFFECT_TARGETPAINT
-              signatureRadiusBonus = @dogmaContext.getModuleAttribute(
-                m.key, @ATTR_SIGNATURERADIUSBONUS)
+      if !result.webs?
+        result.webs = []
+      result.webs.push
+        range: eA.range
+        strength: strength
 
-              strength = signatureRadiusBonus / 100
-              result.tps.push strength
+    callbacks[@EFFECT_TARGETPAINT] = (eA, m) =>
+      signatureRadiusBonus = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_SIGNATURERADIUSBONUS)
+
+      strength = signatureRadiusBonus / 100
+      if !result.tps?
+        result.tps = []
+
+      result.tps.push 
+        optimal: eA.range
+        falloff: eA.falloff
+        strength: strength
+
+    callbacks[@EFFECT_POINT] = (eA, m) =>
+      if !result.points?
+        result.points = []
+
+      result.points.push
+        range: eA.range
+
+    callbacks[@EFFECT_SCRAM] = (eA, m) =>
+      if !result.scrams?
+        result.scrams = []
+
+      result.scrams.push
+        range: eA.range
+
+    callbacks[@EFFECT_DAMP] = (eA, m) =>
+      maxTargetRangeBonus = @dogmaContext.getModuleAttribute(
+        m.key, @ATTR_MAXTARGETRANGEBONUS)
+
+      strength = maxTargetRangeBonus / -100
+      if !result.damps?
+        result.damps = []
+
+      result.damps.push 
+        optimal: eA.range
+        falloff: eA.falloff
+        strength: strength
+
+    @forModulesAndEffects callbacks
 
     return result
 class DescFleet
