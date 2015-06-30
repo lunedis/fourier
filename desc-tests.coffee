@@ -277,3 +277,50 @@ Tinytest.add 'desc ewar', (test) ->
   ewarStats = fit.getEwar()
   test.equal ewarStats.webs[0], 0.6
   test.equal ewarStats.tps[0], 0.375
+
+Tinytest.add 'desc imps', (test) ->
+  eos = """[Eos, Tremble]
+
+  Internal Force Field Array I
+  Armor Explosive Hardener II
+  Drone Damage Amplifier II
+  Drone Damage Amplifier II
+  Nanofiber Internal Structure II
+  Nanofiber Internal Structure II
+
+  Gist X-Type 100MN Afterburner
+  Command Processor I
+  Small Electrochemical Capacitor Booster I, Navy Cap Booster 400
+  Drone Navigation Computer I
+
+  Armored Warfare Link - Damage Control II
+  Skirmish Warfare Link - Interdiction Maneuvers II
+  Skirmish Warfare Link - Rapid Deployment II
+  Skirmish Warfare Link - Evasive Maneuvers II
+  [Empty High slot]
+  [Empty High slot]
+
+  Medium Processor Overclocking Unit II
+  Medium Ancillary Current Router I
+
+
+  Gecko x2
+  Hammerhead II x2
+  Hobgoblin II x1
+  Nanite Repair Paste x500
+
+
+  Mid-grade Snake Alpha
+  Mid-grade Snake Beta
+  Mid-grade Snake Gamma
+  Mid-grade Snake Delta
+  Mid-grade Snake Epsilon
+  Mid-grade Snake Omega
+  Zor's Custom Navigation Hyper-Link"""
+
+  parse = Desc.ParseEFT eos
+  test.equal parse.loadout.implants.length, 7
+
+  fit = Desc.FromParse parse
+  stats = fit.getNavigation()
+  roughly test, stats[1].speed, 1535, 1

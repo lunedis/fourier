@@ -433,6 +433,7 @@ Desc.ParseEFT = (fitting) ->
     loadout:
       drones: []
       charges: []
+      implants: []
 
   racks = [[],[],[],[],[]]
   currentRack = 0
@@ -462,7 +463,6 @@ Desc.ParseEFT = (fitting) ->
         parse.loadout.drones.push({typeID: id, typeName: m[1], quantity: m[2]})
       else if id = lookupCharge m[1]
         parse.loadout.charges.push({typeID: id, typeName: m[1], quantity: m[2]})
-
     else if (m = moduleRegex.exec(l)) != null
       if idModule = lookupModule m[1]
         if m[3]?
@@ -481,6 +481,8 @@ Desc.ParseEFT = (fitting) ->
             typeID: idModule
             typeName: m[1]
           moduleCount++
+      else if idImp = lookupImplant m[1]
+        parse.loadout.implants.push {typeID: idImp, typeName: m[1]}
 
   [parse.loadout.lows, parse.loadout.mids, parse.loadout.highs, parse.loadout.rigs, parse.loadout.subs] = racks
 
@@ -504,6 +506,9 @@ Desc.FromParse = (parse) ->
   
   for d in parse.loadout.drones
     f.addDrone d.typeID, d.quantity
+
+  for i in parse.loadout.implants
+    f.addImplant i.typeID
 
   return f
 
