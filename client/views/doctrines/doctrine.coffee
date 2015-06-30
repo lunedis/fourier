@@ -18,3 +18,12 @@ Template.doctrine.events
       Doctrines.update doctrineID,
         $pull:
           fittings: fitID
+
+Template.editFitting.helpers
+  UpdateFittingsSchema: ->
+    UpdateFittingsSchema
+  document: ->
+    fitting = @
+    doctrine = Doctrines.findOne {fittings: @_id}
+    fitting.links = doctrine.links
+    return fitting

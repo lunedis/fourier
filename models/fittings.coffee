@@ -59,6 +59,14 @@ eftSchemaOptional = new SimpleSchema
     optional: true
     autoform:
       rows: 5
+  links:
+    type: String
+    allowedValues: ['none', 'kiting', 'armor', 'shield']
+    label: 'Links'
+    autoform:
+      label: false
+      afFieldInput:
+        type: 'hidden'
 
 StoreFittingsSchema = new SimpleSchema(
   [mandatoryDescriptionSchema, loadoutSchema])
@@ -110,3 +118,15 @@ if Meteor.isServer
       check document, StoreFittingsSchema
       fitID = Fittings.insert document
       Doctrines.update doctrineID, {$push: {fittings: fitID}}
+    updateFitting: (modifier, documentID) ->
+      check modifier, UpdateFittingsSchema
+      check documentID, String
+
+      if modifier.$set.eft?
+        modifier.$set = transformStats modifier.$set
+      else
+        delete modifier.$set.links
+        delete modifier.$unset.eft
+      check modifier, StoreFittingsSchema
+      console.log modifier.$set.stats.damage
+      Fittings.update documentID, modifier

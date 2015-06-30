@@ -19,3 +19,14 @@ Router.route '/doctrine/:_id',
         Doctrines.findOne _id: @params._id
   waitOn: ->
     [Meteor.subscribe('doctrines'), Meteor.subscribe('fittings')]
+
+Router.route 'doctrine/editFitting/:_id',
+  name: 'editFitting'
+  action: ->
+    @render 'editFitting',
+      data: ->
+        if !@ready
+          return
+        Fittings.findOne _id: @params._id
+  waitOn: ->
+    [Meteor.subscribe('doctrines'), Meteor.subscribe('fittings')]
