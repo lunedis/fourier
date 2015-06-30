@@ -36,8 +36,8 @@
 <template name="editFitting">
 <div class="row">
 	<div class="col-sm-4 col-sm-offset-4">
-		<a href="/presets" role="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Back to Doctrine</a><br/><br/>
-		{{> quickForm id="EditFittingForm" doc=document schema=UpdateFittingsSchema type="method-update" meteormethod="updateFitting"}}
+		<a href="/doctrine/{{doctrine}}" role="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Back to Doctrine</a><br/><br/>
+		{{> quickForm id="EditFittingForm" doc=this schema=UpdateFittingsSchema type="method-update" meteormethod="updateFitting"}}
 	</div>
 </div>
 </template>

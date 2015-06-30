@@ -128,5 +128,4 @@ if Meteor.isServer
         delete modifier.$set.links
         delete modifier.$unset.eft
       check modifier, StoreFittingsSchema
-      console.log modifier.$set.stats.damage
       Fittings.update documentID, modifier

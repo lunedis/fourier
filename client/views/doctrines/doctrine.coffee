@@ -19,11 +19,21 @@ Template.doctrine.events
         $pull:
           fittings: fitID
 
+doctrineID = 0
+
+Template.editFitting.onCreated ->
+  @autorun ->
+    fit = Template.currentData()
+    doctrine = Doctrines.findOne {fittings: fit._id}
+    fit.links = doctrine.links
+    fit.doctrine = doctrine._id
+    doctrineID = doctrine._id
+
 Template.editFitting.helpers
   UpdateFittingsSchema: ->
     UpdateFittingsSchema
-  document: ->
-    fitting = @
-    doctrine = Doctrines.findOne {fittings: @_id}
-    fitting.links = doctrine.links
-    return fitting
+
+#AutoForm.hooks
+#  EditFittingForm:
+#    onSuccess: (operation, fit) ->
+#      Router.go 'doctrine', {_id: doctrineID}
