@@ -10,6 +10,7 @@ TYPE_ISHTAR = 12005
 TYPE_CURATORII = 28213
 TYPE_STASISWEBII = 527
 TYPE_PHASEDWEAPONTP = 19814
+TYPE_SSMEDIUMPLASMASMARTBOMB = 14220
 
 roughly = (test, actual, expected, epsilon) ->
   test.equal(Math.abs(actual - expected) < epsilon, true)
@@ -124,6 +125,17 @@ Tinytest.add 'desc drones', (test) ->
   roughly test, stats.drone.dps, 614, 1
   test.equal stats.drone.range, 60000
   roughly test, stats.drone.speed, 2846, 1
+
+Tinytest.add 'desc smartbomb', (test) ->
+  fit = new DescFitting()
+
+  fit.setShip TYPE_ISHTAR
+  fit.addModule TYPE_SSMEDIUMPLASMASMARTBOMB
+
+  stats = fit.getDamage()
+  roughly test, stats.total, 18, 1
+  roughly test, stats.smartbomb.dps, 18, 1
+  roughly test, stats.smartbomb.range, 5.4, 0.1
 
 Tinytest.add 'desc cloak', (test) ->
   fit = new DescFitting()
@@ -265,4 +277,50 @@ Tinytest.add 'desc ewar', (test) ->
   ewarStats = fit.getEwar()
   test.equal ewarStats.webs[0], 0.6
   test.equal ewarStats.tps[0], 0.375
-  
+
+Tinytest.add 'desc imps', (test) ->
+  eos = """[Eos, Tremble]
+
+  Internal Force Field Array I
+  Armor Explosive Hardener II
+  Drone Damage Amplifier II
+  Drone Damage Amplifier II
+  Nanofiber Internal Structure II
+  Nanofiber Internal Structure II
+
+  Gist X-Type 100MN Afterburner
+  Command Processor I
+  Small Electrochemical Capacitor Booster I, Navy Cap Booster 400
+  Drone Navigation Computer I
+
+  Armored Warfare Link - Damage Control II
+  Skirmish Warfare Link - Interdiction Maneuvers II
+  Skirmish Warfare Link - Rapid Deployment II
+  Skirmish Warfare Link - Evasive Maneuvers II
+  [Empty High slot]
+  [Empty High slot]
+
+  Medium Processor Overclocking Unit II
+  Medium Ancillary Current Router I
+
+
+  Gecko x2
+  Hammerhead II x2
+  Hobgoblin II x1
+  Nanite Repair Paste x500
+
+
+  Mid-grade Snake Alpha
+  Mid-grade Snake Beta
+  Mid-grade Snake Gamma
+  Mid-grade Snake Delta
+  Mid-grade Snake Epsilon
+  Mid-grade Snake Omega
+  Zor's Custom Navigation Hyper-Link"""
+
+  parse = Desc.ParseEFT eos
+  test.equal parse.loadout.implants.length, 7
+
+  fit = Desc.FromParse parse
+  stats = fit.getNavigation()
+  roughly test, stats[1].speed, 1535, 1
