@@ -20,8 +20,17 @@ Template.overview.helpers
     minEHP = {name: '', value: Number.MAX_VALUE}
     minSpeed = {name: '', value: Number.MAX_VALUE}
 
+    totalEwar = {}
+
     _.each fittings, (ship) =>
       ship.count = counts[ship._id]
+
+      for i in [1..ship.count]
+        for type, modules of ship.stats.ewar
+          if !totalEwar[type]?
+            totalEwar[type] = []
+          for m in modules
+            totalEwar[type].push(m)
 
       if ship.count > 0      
         ehp = ship.stats.tank.ehp
@@ -41,6 +50,7 @@ Template.overview.helpers
     ret.minEHP = minEHP
     ret.minSpeed = minSpeed
     ret.sumCount = sumCount
+    ret.totalEwar = totalEwar
     return ret
 
 Template.overviewTable.helpers

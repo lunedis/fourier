@@ -44,6 +44,7 @@
 			<th>{{> fourierIcon path="ehp"}} EHP</th>
 			<th>{{> fourierIcon path="speed"}} Speed / Sig</th>
 			<th>{{> fourierIcon path="dps"}} DPS</th>
+			<th>Ewar</th>
 			<th>Count</th>
 			<th style="width: 35px;"></th>
 		</tr>
@@ -60,6 +61,7 @@
 			{{/with}}
 		</td>
 		<td>{{>damageStats stats.damage}}</td>
+		<td>{{>ewarIcons}}</td>
 		<td>{{count}}</td>
 		<td>
 			{{> countButtons}}
@@ -68,4 +70,41 @@
 {{/each}}
 	</tbody>
 </table>
+</template>
+
+<template name="ewarIcons">
+{{#each stats.ewar.points}}
+	{{#ewarIcon type="point"}}
+		{{formatNumberK range}}k
+	{{/ewarIcon}}
+{{/each}}
+{{#each stats.ewar.scrams}}
+	{{#ewarIcon type="scram"}}
+		{{formatNumberK range}}k
+	{{/ewarIcon}}
+{{/each}}
+{{#each stats.ewar.webs}}
+	{{#ewarIcon type="web"}}
+		{{formatNumberK range}}k
+	{{/ewarIcon}}
+{{/each}}
+{{#each stats.ewar.tps}}
+	{{#ewarIcon type="tp"}}
+		{{percent strength}}
+	{{/ewarIcon}}
+{{/each}}
+{{#each stats.ewar.damps}}
+	{{#ewarIcon type="damp"}}
+		{{percent strength}}
+	{{/ewarIcon}}
+{{/each}}
+</template>
+
+<template name="ewarIcon">
+<div class="ewar">
+	<img src="/img/fourier/{{type}}.png" class="fourierIcon">
+	<span class="strength">
+		{{>Template.contentBlock}}
+	</span>
+</div>
 </template>

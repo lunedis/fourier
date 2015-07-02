@@ -26,3 +26,7 @@ UI.registerHelper 'log', (context, options) ->
 
 UI.registerHelper 'greaterZero', (context, options) ->
   context > 0
+
+UI.registerHelper 'percent', (context, options) ->
+  check context, Number
+  return (context * 100).toFixed(0) + "%"
