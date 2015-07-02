@@ -159,6 +159,7 @@ class DescFitting
     stats.navigation = @getNavigation()
     stats.damage = @getDamage()
     stats.outgoing = @getOutgoing()
+    stats.ewar = @getEwar()
     return stats
 
   getStats: ->
