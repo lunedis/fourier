@@ -296,6 +296,29 @@ Tinytest.add 'desc outgoing', (test) ->
   roughly test, outgoingStats.shield.rr, 85.3, 0.1
   roughly test, outgoingStats.shield.range, 71400, 100
 
+Tinytest.add 'desc empty racks', (test) ->
+  hyena = """[Hyena, Talwarfleet]
+
+[Empty Low slot]
+[Empty Low slot]
+[Empty Low slot]
+
+5MN Quad LiF Restrained Microwarpdrive
+Medium Shield Extender II
+Medium Shield Extender II
+Federation Navy Stasis Webifier
+
+[Empty High slot]
+[Empty High slot]
+[Empty High slot]
+
+Small Core Defense Field Extender II
+Small Core Defense Field Extender II"""
+
+  parse = Desc.ParseEFT hyena
+  test.equal parse.loadout.highs.length, 0
+  test.equal parse.loadout.rigs.length, 2
+
 Tinytest.add 'desc imps', (test) ->
   eos = """[Eos, Tremble]
 

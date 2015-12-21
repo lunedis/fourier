@@ -495,6 +495,7 @@ Desc.ParseEFT = (fitting) ->
     headerRegex = /\[([A-Za-z ]+), (.*)\]/
     droneRegex = /(.*) x([0-9]+)$/
     moduleRegex = /([A-Za-z0-9 '\-\(\)]+)(, )?(.*)?/
+    emptySlotRegex = /\[(.*)\]/
 
     if (l == '' || l == "\r") && moduleCount > 0
       currentRack++
@@ -506,6 +507,8 @@ Desc.ParseEFT = (fitting) ->
         parse.shipTypeName = m[1]
       else
         throw new Meteor.Error 500, 'Error reading ship'
+    else if (m = emptySlotRegex.exec(l)) != null
+      moduleCount++
     else if (m = droneRegex.exec(l)) != null
       if id = lookupDrone m[1]
         parse.loadout.drones.push({typeID: id, typeName: m[1], quantity: m[2]})
